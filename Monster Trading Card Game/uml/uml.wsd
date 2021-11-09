@@ -1,0 +1,96 @@
+@startuml
+
+    namespace MTCG {
+        namespace MTCG.Game {
+            class GameController {
+                {field} + User Player1 +get
+                {field} + User Player2 +get
+                {field} + GameState State +get 
+
+                + GameController(User Creator)
+                + void Join(User joiner)
+            }
+        }
+
+        namespace MTCG.Cards {
+            Card "0...*" *-- "0...*" Rule : ruledBy >
+            abstract class Rule {
+                + abstract void apply(Card ruledCard, Card otherCard, GameController game)
+            }
+
+            class Deck {
+                {field} + Card[4] Cards +get
+
+                + Deck(Card[] Cards)
+                + Card Draw()
+            }
+            Deck "0...1" *-- "0...8" Card : contains >
+
+            abstract class Card {
+                {field} + ElementType Type +get
+                {field} + string Name +get
+                {field} + int Damage +get
+                {field} + List<Rule> Rules +get
+
+                + Card(string name, ElementType type, int damage)
+            }
+
+            Card "0...*" *-- "1" ElementType : has Type >
+            enum ElementType {
+                Fire
+                Water
+                Normal
+            }
+
+            namespace MTCG.Cards.Monsters {
+                MTCG.Cards.Card <|-- Monster
+                class Monster {
+                    + Monster(string name, ElementType type, int damage)
+                }
+
+                Monster <|-- Goblin
+                class Goblin {
+                    + Goblin(string name, ElementType type, int damage)
+                }
+
+                Monster <|-- Wizard
+                class Wizard {
+                    + Wizard(string name, ElementType type, int damage)
+                }
+                
+                Monster <|-- Orc
+                class Orc {
+                    + Orc(string name, ElementType type, int damage)
+                }
+                
+                Monster <|-- Knight
+                class Knight {
+                    + Knight(string name, ElementType type, int damage)
+                }
+
+                Monster <|-- Kraken
+                class Kraken {
+                    + Kraken(string name, ElementType type, int damage)
+                }
+
+                Monster <|-- FireElf
+                class FireElf {
+                    + FireElf(string name, ElementType type, int damage)
+                }
+                
+                Monster <|-- Dragon
+                class Dragon {
+                    + Dragon(string name, ElementType type, int damage)
+                }
+            }
+
+            namespace MTCG.Cards.Spells {
+                MTCG.Cards.Card <|-- Spell
+                class Spell {
+                    + Spell(string name, ElementType type, int damage)
+                }
+            }
+        }
+    }
+
+@enduml

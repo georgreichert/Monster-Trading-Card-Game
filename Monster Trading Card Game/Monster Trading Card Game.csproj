@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>Monster_Trading_Card_Game</RootNamespace>
+    <RootNamespace>MTCG</RootNamespace>
   </PropertyGroup>
 
 </Project>

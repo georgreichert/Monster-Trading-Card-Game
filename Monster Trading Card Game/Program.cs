@@ -6,7 +6,13 @@ namespace MTCG
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            string line;
+            Console.WriteLine("Enter command - ");
+            while ((line = Console.ReadLine()) != "exit")
+            {
+                // TODO: give command to game logic
+                Console.WriteLine("Enter command - ");
+            }
         }
     }
 }
