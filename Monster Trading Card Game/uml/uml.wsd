@@ -13,11 +13,23 @@
         }
 
         namespace MTCG.Cards {
-            Card "0...*" *-- "0...*" Rule : ruledBy >
-            abstract class Rule {
-                + abstract void apply(Card ruledCard, Card otherCard, GameController game)
-            }
+            namespace MTCG.Cards.Rules {
+                MTCG.Cards.Card "0...*" *-- "0...*" Rule : ruledBy >
+                abstract class Rule {
+                    + abstract void Apply(Card ruledCard, Card otherCard, GameController game)
+                }
 
+                Rule <|-- MonsterVsMonsterRule
+                abstract class MonsterVsMonsterRule {
+                    + void Apply(Card ruledCard, Card otherCard, GameController game)
+                    - abstract void TypedApply(Monster ruledMonster, Monster otherMonster, GameController game)
+                }
+
+                MonsterVsMonsterRule <|-- GobinVsDragonRule
+                class GobinVsDragonRule {
+                    - void TypedApply(Monster ruledMonster, Monster otherMonster, GameController game)
+                }
+            }
             class Deck {
                 {field} + Card[4] Cards +get
 
@@ -27,10 +39,11 @@
             Deck "0...1" *-- "0...8" Card : contains >
 
             abstract class Card {
-                {field} + ElementType Type +get
+                {field} + ElementType EType +get
                 {field} + string Name +get
                 {field} + int Damage +get
                 {field} + List<Rule> Rules +get
+                bla
 
                 + Card(string name, ElementType type, int damage)
             }
@@ -46,41 +59,17 @@
                 MTCG.Cards.Card <|-- Monster
                 class Monster {
                     + Monster(string name, ElementType type, int damage)
+                    {field} + CreatureType CType +get
                 }
 
-                Monster <|-- Goblin
-                class Goblin {
-                    + Goblin(string name, ElementType type, int damage)
-                }
-
-                Monster <|-- Wizard
-                class Wizard {
-                    + Wizard(string name, ElementType type, int damage)
-                }
-                
-                Monster <|-- Orc
-                class Orc {
-                    + Orc(string name, ElementType type, int damage)
-                }
-                
-                Monster <|-- Knight
-                class Knight {
-                    + Knight(string name, ElementType type, int damage)
-                }
-
-                Monster <|-- Kraken
-                class Kraken {
-                    + Kraken(string name, ElementType type, int damage)
-                }
-
-                Monster <|-- FireElf
-                class FireElf {
-                    + FireElf(string name, ElementType type, int damage)
-                }
-                
-                Monster <|-- Dragon
-                class Dragon {
-                    + Dragon(string name, ElementType type, int damage)
+                Monster "0...*" *-- "1" CreatureType : has Type >
+                enum CreatureType {
+                    Goblin
+                    Wizard
+                    Kraken
+                    Knight
+                    Dragon
+                    Orc
                 }
             }
 

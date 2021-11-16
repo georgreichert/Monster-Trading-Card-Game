@@ -1,6 +1,6 @@
 ﻿using MTCG.Game;
 
-namespace MTCG.Cards
+namespace MTCG.Cards.Rules
 {
     abstract class Rule
     {
