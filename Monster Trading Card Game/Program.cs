@@ -2,6 +2,7 @@
 using MTCG.Cards.Monsters;
 using MTCG.Cards.Spells;
 using MTCG.Game;
+using MTCG.Server;
 using System;
 
 namespace MTCG
@@ -34,6 +35,15 @@ namespace MTCG
             GameController game = new GameController(deck1, deck2);
             game.Play();
             game.PrintLog();
+
+            MessageManager manager = new MessageManager();
+            manager.AddMessage("Hello World!");
+            manager.AddMessage("test");
+            var messages = manager.ListMessages();
+            foreach (var message in messages)
+            {
+                Console.WriteLine($"{message.ID}: {message.Content}");
+            }
         }
     }
 }

@@ -3,12 +3,14 @@
     namespace MTCG {
         namespace MTCG.Game {
             class GameController {
-                {field} + User Player1 +get
-                {field} + User Player2 +get
-                {field} + GameState State +get 
-
-                + GameController(User Creator)
-                + void Join(User joiner)
+                - List<string> _battleLog
+                - private Deck _deck1
+                - private Deck _deck2
+                + GameController(Deck deck1, Deck deck2)
+                + void Play()
+                - int HandleFight()
+                + void AddBattleLog(string log)
+                + void PrintLog()
             }
         }
 
@@ -19,33 +21,58 @@
                     + abstract void Apply(Card ruledCard, Card otherCard, GameController game)
                 }
 
-                Rule <|-- MonsterVsMonsterRule
-                abstract class MonsterVsMonsterRule {
-                    + void Apply(Card ruledCard, Card otherCard, GameController game)
-                    - abstract void TypedApply(Monster ruledMonster, Monster otherMonster, GameController game)
+                Rule <|-- GobinVSDragonRule
+                class GobinVSDragonRule {
+                    - void Apply(Card ruledMonster, Card otherMonster, GameController game)
                 }
 
-                MonsterVsMonsterRule <|-- GobinVsDragonRule
-                class GobinVsDragonRule {
-                    - void TypedApply(Monster ruledMonster, Monster otherMonster, GameController game)
+                Rule <|-- FireElfVSDragonRule
+                class FireElfVSDragonRule {
+                    - void Apply(Card ruledMonster, Card otherMonster, GameController game)
+                }
+
+                Rule <|-- KnightVSWaterSpellRule
+                class KnightVSWaterSpellRule {
+                    - void Apply(Card ruledMonster, Card otherMonster, GameController game)
+                }
+                
+                Rule <|-- KrakenVSSpellRule
+                class KrakenVSSpellRule {
+                    - void Apply(Card ruledMonster, Card otherMonster, GameController game)
+                }
+                
+                Rule <|-- WizardVSOrcRule
+                class WizardVSOrcRule {
+                    - void Apply(Card ruledMonster, Card otherMonster, GameController game)
                 }
             }
             class Deck {
-                {field} + Card[4] Cards +get
-
-                + Deck(Card[] Cards)
-                + Card Draw()
+                - List<Card> _cards
+                {field} + string Name +get +set 
+                {field} + int Count +get +private set 
+                + Deck(string Name)
+                + Card DrawCard()
+                + void AddCard(Card card)
             }
             Deck "0...1" *-- "0...8" Card : contains >
+            MTCG.Game.GameController "1" *-- "2" MTCG.Cards.Deck : plays with >
 
             abstract class Card {
                 {field} + ElementType EType +get
                 {field} + string Name +get
                 {field} + int Damage +get
                 {field} + List<Rule> Rules +get
-                bla
-
+                {field} + bool Destroyed +get +private set
+                {field} + float OffensiveDamage +get
+                {field} + float DefensiveDamage +get
+                - List<float> _offensiveDamageFactors
+                - List<float> _defensiveDamageFactors
                 + Card(string name, ElementType type, int damage)
+                + void Destroy()
+                + void NoDamage()
+                + void Effective()
+                + void NotEffective()
+                + void Reset()
             }
 
             Card "0...*" *-- "1" ElementType : has Type >
