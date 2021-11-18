@@ -16,34 +16,39 @@
 
         namespace MTCG.Cards {
             namespace MTCG.Cards.Rules {
-                MTCG.Cards.Card "0...*" *-- "0...*" Rule : ruledBy >
+                MTCG.Cards.Card "0...*" o-- "0...*" Rule : ruledBy >
                 abstract class Rule {
                     + abstract void Apply(Card ruledCard, Card otherCard, GameController game)
                 }
 
                 Rule <|-- GobinVSDragonRule
                 class GobinVSDragonRule {
-                    - void Apply(Card ruledMonster, Card otherMonster, GameController game)
+                    + void Apply(Card ruledMonster, Card otherMonster, GameController game)
                 }
 
                 Rule <|-- FireElfVSDragonRule
                 class FireElfVSDragonRule {
-                    - void Apply(Card ruledMonster, Card otherMonster, GameController game)
+                    + void Apply(Card ruledMonster, Card otherMonster, GameController game)
                 }
 
                 Rule <|-- KnightVSWaterSpellRule
                 class KnightVSWaterSpellRule {
-                    - void Apply(Card ruledMonster, Card otherMonster, GameController game)
+                    + void Apply(Card ruledMonster, Card otherMonster, GameController game)
                 }
                 
                 Rule <|-- KrakenVSSpellRule
                 class KrakenVSSpellRule {
-                    - void Apply(Card ruledMonster, Card otherMonster, GameController game)
+                    + void Apply(Card ruledMonster, Card otherMonster, GameController game)
                 }
                 
                 Rule <|-- WizardVSOrcRule
                 class WizardVSOrcRule {
-                    - void Apply(Card ruledMonster, Card otherMonster, GameController game)
+                    + void Apply(Card ruledMonster, Card otherMonster, GameController game)
+                }
+
+                Rule <|-- ElementRule
+                class ElementRule {
+                    + void Apply(Card ruledMonster, Card otherMonster, GameController game)
                 }
             }
             class Deck {
@@ -54,8 +59,14 @@
                 + Card DrawCard()
                 + void AddCard(Card card)
             }
-            Deck "0...1" *-- "0...8" Card : contains >
-            MTCG.Game.GameController "1" *-- "2" MTCG.Cards.Deck : plays with >
+            Deck "0...1" o-- "0...8" Card : contains >
+            MTCG.Game.GameController "1" -- "2" MTCG.Cards.Deck : plays with >
+
+            enum ElementType {
+                Fire
+                Water
+                Normal
+            }
 
             abstract class Card {
                 {field} + ElementType EType +get
@@ -75,22 +86,17 @@
                 + void Reset()
             }
 
-            Card "0...*" *-- "1" ElementType : has Type >
-            enum ElementType {
-                Fire
-                Water
-                Normal
-            }
+            Card "0...*" o-- "1" ElementType : has Type >
 
             namespace MTCG.Cards.Monsters {
                 MTCG.Cards.Card <|-- Monster
                 class Monster {
-                    + Monster(string name, ElementType type, int damage)
-                    {field} + CreatureType CType +get
+                    + Monster(string name, ElementType eType, int damage, MonsterType mType)
+                    {field} + MonsterType MType +get
                 }
 
-                Monster "0...*" *-- "1" CreatureType : has Type >
-                enum CreatureType {
+                Monster "0...*" o-- "1" MonsterType : has Type >
+                enum MonsterType {
                     Goblin
                     Wizard
                     Kraken

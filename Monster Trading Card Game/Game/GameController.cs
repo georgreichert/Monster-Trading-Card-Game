@@ -21,15 +21,17 @@ namespace MTCG.Game
             int turnCounter = 1;
             while (_deck1.Count > 0 && _deck2.Count > 0 && turnCounter <= 100)
             {
-                AddBattleLog("#######################\n" +
-                            $"###### TURN {turnCounter} {(turnCounter >= 10 ? "" : "#")}#######");
-                AddBattleLog($"### Player1: {_deck1.Count} cards ### Player2: {_deck2.Count} cards ###");
+                AddBattleLog("#############################################\n" +
+                            $"################## TURN {turnCounter} {(turnCounter >= 10 ? "" : "#")}##################\n" +
+                            $"### Player1: {_deck1.Count} card{(_deck1.Count == 1 ? ' ' : 's')} ### " +
+                            $"Player2: {_deck2.Count} card{(_deck2.Count == 1 ? ' ' : 's')} ###\n" +
+                            $"#############################################");
 
                 Card card1 = _deck1.DrawCard();
-                AddBattleLog($"Player1 plays {card1.Name}");
+                AddBattleLog($"Player1 plays {card1.Name} ({card1.Damage})");
 
                 Card card2 = _deck2.DrawCard();
-                AddBattleLog($"Player2 plays {card2.Name}");
+                AddBattleLog($"Player2 plays {card2.Name} ({card2.Damage})\n");
                 
                 foreach (Rule rule in card1.Rules)
                 {
@@ -41,9 +43,11 @@ namespace MTCG.Game
                     rule.Apply(card2, card1, this);
                 }
 
-                AddBattleLog($"##### {card1.Name}: {(card1.OffensiveDamage > card1.DefensiveDamage ? card1.OffensiveDamage : card1.DefensiveDamage)}" +
-                    $" #### " +
-                    $"{card2.Name}: {(card2.OffensiveDamage > card2.DefensiveDamage ? card2.OffensiveDamage : card2.DefensiveDamage)} #####");
+                float card1VisibleDamage = card1.OffensiveDamage > card1.DefensiveDamage ? card1.OffensiveDamage : card1.DefensiveDamage;
+                float card2VisibleDamage = card2.OffensiveDamage > card2.DefensiveDamage ? card2.OffensiveDamage : card2.DefensiveDamage;
+
+                AddBattleLog($"\n{card1.Name}: {card1VisibleDamage}\n" +
+                    $"{card2.Name}: {card2VisibleDamage}\n");
 
                 string message;
                 switch (HandleFight(card1, card2))
@@ -52,7 +56,7 @@ namespace MTCG.Game
                         _deck1.AddCard(card1);
                         _deck1.AddCard(card2);
                         message = $"And the winner is ... { card1.Name} with " +
-                            $"{(card1.OffensiveDamage > card1.DefensiveDamage ? card1.OffensiveDamage : card1.DefensiveDamage)} damage!";
+                            $"{card1VisibleDamage} damage!";
                         break;
                     case 0:
                         _deck1.AddCard(card1);
@@ -63,13 +67,12 @@ namespace MTCG.Game
                         _deck2.AddCard(card1);
                         _deck2.AddCard(card2);
                         message = $"And the winner is ... { card2.Name} with " +
-                            $"{(card2.OffensiveDamage > card2.DefensiveDamage ? card2.OffensiveDamage : card2.DefensiveDamage)} damage!";
+                            $"{card2VisibleDamage} damage!";
                         break;
                     default:
                         throw new Exception("Invalid return value, can't determine winner.");
                 }
-                AddBattleLog(message);
-                AddBattleLog("");
+                AddBattleLog(message + "\n\n");
                 card1.Reset();
                 card2.Reset();
 

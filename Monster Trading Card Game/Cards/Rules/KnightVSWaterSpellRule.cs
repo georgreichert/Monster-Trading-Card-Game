@@ -22,7 +22,7 @@ namespace MTCG.Cards.Rules
             }
 
             ruledCard.Destroy();
-            game.AddBattleLog($"{ruledCard.Name}'s armor is too heavy! He drowned in {otherCard.Name}'s overwhelming flood.");
+            game.AddBattleLog($"{ruledCard.Name}'s armor is too heavy, {otherCard.Name} is drowning him!");
         }
     }
 }

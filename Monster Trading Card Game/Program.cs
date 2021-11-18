@@ -22,8 +22,8 @@ namespace MTCG
             Deck deck1 = new Deck("Testdeck1");
             Deck deck2 = new Deck("Testdeck2");
 
-            deck1.AddCard(new Monster("Useless Goblin", ElementType.Normal, 40, MonsterType.Goblin));
-            deck1.AddCard(new Monster("Mighty Fire Elemental", ElementType.Fire, 70, MonsterType.Other));
+            deck1.AddCard(new Monster("Useless Knight", ElementType.Normal, 40, MonsterType.Knight));
+            deck1.AddCard(new Monster("Fearless Fire Elf", ElementType.Fire, 70, MonsterType.Elf));
             deck1.AddCard(new Spell("Firebolt", ElementType.Fire, 50));
             deck1.AddCard(new Spell("Squirt", ElementType.Water, 40));
 
