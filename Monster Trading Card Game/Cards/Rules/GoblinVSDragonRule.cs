@@ -4,7 +4,7 @@ using System;
 
 namespace MTCG.Cards.Rules
 {
-    internal class GoblinVSDragonRule : Rule
+    public class GoblinVSDragonRule : Rule
     {
         public override void Apply(Card ruledCard, Card otherCard, GameController game)
         {

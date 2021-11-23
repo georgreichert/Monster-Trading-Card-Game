@@ -5,7 +5,7 @@ using System;
 
 namespace MTCG.Cards.Rules
 {
-    internal class KnightVSWaterSpellRule : Rule
+    public class KnightVSWaterSpellRule : Rule
     {
         public override void Apply(Card ruledCard, Card otherCard, GameController game)
         {

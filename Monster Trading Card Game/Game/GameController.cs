@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MTCG.Game
 {
-    class GameController
+    public class GameController
     {
         private List<string> _battleLog = new List<string>();
         private Deck _deck1, _deck2;
@@ -52,18 +52,18 @@ namespace MTCG.Game
                 string message;
                 switch (HandleFight(card1, card2))
                 {
-                    case -1:
+                    case BattleOutcome.WinnerCard1:
                         _deck1.AddCard(card1);
                         _deck1.AddCard(card2);
                         message = $"And the winner is ... { card1.Name} with " +
                             $"{card1VisibleDamage} damage!";
                         break;
-                    case 0:
+                    case BattleOutcome.Draw:
                         _deck1.AddCard(card1);
                         _deck2.AddCard(card2);
                         message = $"It's a draw between { card1.Name} and {card2.Name}.";
                         break;
-                    case 1:
+                    case BattleOutcome.WinnerCard2:
                         _deck2.AddCard(card1);
                         _deck2.AddCard(card2);
                         message = $"And the winner is ... { card2.Name} with " +
@@ -94,27 +94,33 @@ namespace MTCG.Game
             AddBattleLog(finalMessage);
         }
 
-        private int HandleFight(Card card1, Card card2)
+        private BattleOutcome HandleFight(Card card1, Card card2)
         {
             if (card1.Destroyed)
             {
                 if (card2.Destroyed)
                 {
-                    return 0;
+                    return BattleOutcome.Draw;
                 }
-                return 1;
+                return BattleOutcome.WinnerCard2;
             } else if (card2.Destroyed)
             {
-                return -1;
+                return BattleOutcome.WinnerCard1;
             }
             if (card1.OffensiveDamage > card2.DefensiveDamage)
             {
-                return -1;
+                return BattleOutcome.WinnerCard1;
             } else if (card2.OffensiveDamage > card1.DefensiveDamage)
             {
-                return 1;
+                return BattleOutcome.WinnerCard2;
             }
             return 0;
+        }
+        private enum BattleOutcome
+        {
+            WinnerCard1,
+            WinnerCard2,
+            Draw
         }
 
         internal void AddBattleLog(string log)

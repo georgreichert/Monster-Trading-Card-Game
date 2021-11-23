@@ -3,7 +3,7 @@ using MTCG.Game;
 
 namespace MTCG.Cards.Rules
 {
-    internal class ElementRule : Rule
+    public class ElementRule : Rule
     {
         public override void Apply(Card ruledCard, Card otherCard, GameController game)
         {

@@ -5,7 +5,7 @@ using System;
 
 namespace MTCG.Cards.Rules
 {
-    internal class KrakenVSSpellRule : Rule
+    public class KrakenVSSpellRule : Rule
     {
         public override void Apply(Card ruledCard, Card otherCard, GameController game)
         {

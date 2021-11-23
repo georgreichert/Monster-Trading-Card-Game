@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MTCG.Cards.Monsters
 {
-    class Monster : Card
+    public class Monster : Card
     {
         public MonsterType MType { get; }
 

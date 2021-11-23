@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MTCG.Cards.Spells
 {
-    class Spell : Card
+    public class Spell : Card
     {
         public Spell(string name, ElementType type, int damage) : base(name, type, damage)
         {

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MTCG.Cards
 {
-    abstract class Card
+    public abstract class Card
     {
         public string Name { get; }
         public ElementType EType { get; }
@@ -51,29 +51,29 @@ namespace MTCG.Cards
             Rules.Add(new ElementRule());
         }
 
-        internal void Destroy()
+        public void Destroy()
         {
             Destroyed = true;
         }
 
-        internal void NoDamage()
+        public void NoDamage()
         {
             _offensiveDamageFactors.Add(0f);
         }
 
-        internal void Effective()
+        public void Effective()
         {
             _offensiveDamageFactors.Add(2f);
             _defensiveDamageFactors.Add(2f);
         }
 
-        internal void NotEffective()
+        public void NotEffective()
         {
             _offensiveDamageFactors.Add(0.5f);
             _defensiveDamageFactors.Add(0.5f);
         }
 
-        internal void Reset()
+        public void Reset()
         {
             _offensiveDamageFactors.Clear();
             _defensiveDamageFactors.Clear();

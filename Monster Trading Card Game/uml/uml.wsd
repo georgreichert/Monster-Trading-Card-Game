@@ -16,7 +16,8 @@
 
         namespace MTCG.Cards {
             namespace MTCG.Cards.Rules {
-                MTCG.Cards.Card "0...*" o-- "0...*" Rule : ruledBy >
+                MTCG.Cards.Card "0...*" -- "0...*" Rule : ruledBy >
+                MTCG.Game.GameController "0...*" -- "0...*" Rule : ruledBy >
                 abstract class Rule {
                     + abstract void Apply(Card ruledCard, Card otherCard, GameController game)
                 }
