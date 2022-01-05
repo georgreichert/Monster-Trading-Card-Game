@@ -11,7 +11,7 @@ namespace MTCG.Cards.Monsters
     {
         public MonsterType MType { get; }
 
-        public Monster(string name, ElementType eType, int damage, MonsterType mType) : base(name, eType, damage)
+        public Monster(string id, string name, ElementType eType, int damage, MonsterType mType) : base(id, name, eType, damage)
         {
             MType = mType;
             switch (mType)

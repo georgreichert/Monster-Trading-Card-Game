@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTCG.Server.Models
+namespace Server.Core.Routing
 {
-    class User
+    public interface IRouteCommand
     {
-        public string Username { get; set; }
-        public string Password { get; set; }
+        Response.Response Execute();
     }
 }

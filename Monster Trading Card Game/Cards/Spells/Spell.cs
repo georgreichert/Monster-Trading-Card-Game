@@ -8,7 +8,7 @@ namespace MTCG.Cards.Spells
 {
     public class Spell : Card
     {
-        public Spell(string name, ElementType type, int damage) : base(name, type, damage)
+        public Spell(string id, string name, ElementType type, int damage) : base(id, name, type, damage)
         {
         }
     }

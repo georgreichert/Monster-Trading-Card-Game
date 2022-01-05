@@ -7,6 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monster Trading Card Game",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monster Trading Card Game Tests", "Monster Trading Card Game Tests\Monster Trading Card Game Tests.csproj", "{A2AC077E-F6EF-4AD6-85B8-E347A90EE196}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server.Core", "SWE1HttpServer.Core\Server.Core.csproj", "{6C7C1675-97C4-415B-92A2-656CE790788B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "SWE1HttpServer\Server.csproj", "{D633FF20-492D-4491-A3DD-D25CEFA30202}"
+	ProjectSection(ProjectDependencies) = postProject
+		{63899FB4-FF87-4A2E-B7C4-63F0B5C1B0E6} = {63899FB4-FF87-4A2E-B7C4-63F0B5C1B0E6}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +28,14 @@ Global
 		{A2AC077E-F6EF-4AD6-85B8-E347A90EE196}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2AC077E-F6EF-4AD6-85B8-E347A90EE196}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2AC077E-F6EF-4AD6-85B8-E347A90EE196}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C7C1675-97C4-415B-92A2-656CE790788B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C7C1675-97C4-415B-92A2-656CE790788B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C7C1675-97C4-415B-92A2-656CE790788B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C7C1675-97C4-415B-92A2-656CE790788B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D633FF20-492D-4491-A3DD-D25CEFA30202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D633FF20-492D-4491-A3DD-D25CEFA30202}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D633FF20-492D-4491-A3DD-D25CEFA30202}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D633FF20-492D-4491-A3DD-D25CEFA30202}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

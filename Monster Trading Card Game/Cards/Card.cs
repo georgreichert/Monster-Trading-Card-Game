@@ -10,6 +10,7 @@ namespace MTCG.Cards
 {
     public abstract class Card
     {
+        public string ID { get; }
         public string Name { get; }
         public ElementType EType { get; }
         public float Damage { get; }
@@ -42,8 +43,9 @@ namespace MTCG.Cards
         private List<float> _offensiveDamageFactors = new List<float>();
         private List<float> _defensiveDamageFactors = new List<float>();
 
-        public Card (string name, ElementType type, int damage)
+        public Card (string id, string name, ElementType type, int damage)
         {
+            ID = id;
             Name = name;
             EType = type;
             Damage = damage;

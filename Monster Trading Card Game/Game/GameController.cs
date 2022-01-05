@@ -114,7 +114,7 @@ namespace MTCG.Game
             {
                 return BattleOutcome.WinnerCard2;
             }
-            return 0;
+            return BattleOutcome.Draw;
         }
         private enum BattleOutcome
         {

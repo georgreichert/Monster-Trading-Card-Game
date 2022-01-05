@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTCG.Server.Models
+namespace Server.Core.Authentication
 {
-    class Message
+    public interface IIdentity
     {
-        public int ID { get; set; }
-        public string Content { get; set; }
     }
 }
