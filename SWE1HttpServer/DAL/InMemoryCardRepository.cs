@@ -1,0 +1,118 @@
+﻿using MTCG.Cards;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Server.DAL
+{
+    class InMemoryCardRepository : ICardRepository
+    {
+        private readonly Dictionary<string, Tuple<string, Card>> cards = new();
+        private readonly Dictionary<string, Deck> decks = new();
+        private readonly List<List<Card>> packages = new();
+
+        public void AddPackage(string[] ids)
+        {
+            if (ids.Length != 5)
+            {
+                throw new ArgumentException("Packages must have exactly 5 Cards in them!");
+            }
+            List<Card> package = new();
+            foreach (string id in ids)
+            {
+                if (cards[id].Item1 == "")
+                {
+                    package.Add(cards[id].Item2);
+                } else
+                {
+                    throw new ArgumentException($"Card {id} is already owned by {cards[id].Item1}!");
+                }
+            }
+            packages.Add(package);
+        }
+
+        public void AssignCardToDeck(string id)
+        {
+            Tuple<string, Card> card = cards[id];
+            if (card.Item1 != "")
+            {
+                int count;
+                try
+                {
+                    count = decks[card.Item1].Count;
+                }
+                catch (KeyNotFoundException e)
+                {
+                    decks.Add(card.Item1, new Deck($"{card.Item1}'s Deck"));
+                    count = 0;
+                }
+                if (count <= 3)
+                {
+                    decks[card.Item1].AddCard(card.Item2);
+                }
+                else
+                {
+                    throw new DeckIsFullException("Can't add more than 4 cards to a deck!");
+                }
+            }
+        }
+
+        public void AssignCardToUser(string id, string user)
+        {
+            cards[id] = new Tuple<string, Card>(user, cards[id].Item2);
+        }
+
+        public void DeleteCard(string id)
+        {
+            if (!cards.Remove(id)) throw new KeyNotFoundException();
+        }
+
+        public Card GetCard(string id)
+        {
+            return cards[id].Item2;
+        }
+
+        public IEnumerable<Card> GetCards(string username)
+        {
+            List<Card> r = new();
+            foreach (KeyValuePair<string, Tuple<string, Card>> card in cards)
+            {
+                if (card.Value.Item1 == username)
+                {
+                    r.Add(card.Value.Item2);
+                }
+            }
+            return r;
+        }
+
+        public Deck GetDeck(string user)
+        {
+            return decks[user];
+        }
+
+        public void GiveRandomPackageToUser(string user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InsertCard(Card card)
+        {
+            cards.Add(card.ID, new Tuple<string, Card>("", card));
+        }
+
+        public void RemoveCardFromDeck(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveDeck(string user)
+        {
+            if (!decks.Remove(user))
+            {
+                throw new KeyNotFoundException();
+            }
+        }
+    }
+}

@@ -2,7 +2,6 @@
 using MTCG.Cards.Monsters;
 using MTCG.Cards.Spells;
 using MTCG.Game;
-using MTCG.Server;
 using System;
 
 namespace MTCG

@@ -13,5 +13,12 @@ namespace Server.DAL
         public Card GetCard(string id);
         public void InsertCard(Card card);
         public void DeleteCard(string id);
+        public void AssignCardToUser(string id, string user);
+        public void AssignCardToDeck(string id);
+        public void RemoveCardFromDeck(string id);
+        public Deck GetDeck(string user);
+        public void RemoveDeck(string user);
+        public void AddPackage(string[] ids);
+        public void GiveRandomPackageToUser(string user);
     }
 }
