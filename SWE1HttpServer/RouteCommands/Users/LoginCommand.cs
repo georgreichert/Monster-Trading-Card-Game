@@ -11,14 +11,14 @@ namespace Server.RouteCommands.Users
 {
     class LoginCommand : IRouteCommand
     {
-        private readonly IMessageManager messageManager;
+        private readonly IGameManager gameManager;
 
         public Credentials Credentials { get; private set; }
 
-        public LoginCommand(IMessageManager messageManager, Credentials credentials)
+        public LoginCommand(IGameManager gameManager, Credentials credentials)
         {
             Credentials = credentials;
-            this.messageManager = messageManager;
+            this.gameManager = gameManager;
         }
 
         public Response Execute()
@@ -26,7 +26,7 @@ namespace Server.RouteCommands.Users
             User user;
             try
             {
-                user = messageManager.LoginUser(Credentials);
+                user = gameManager.LoginUser(Credentials);
             }
             catch (UserNotFoundException)
             {

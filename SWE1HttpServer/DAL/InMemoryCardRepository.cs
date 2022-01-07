@@ -9,11 +9,12 @@ namespace Server.DAL
 {
     class InMemoryCardRepository : ICardRepository
     {
-        private readonly Dictionary<string, Tuple<string, Card>> cards = new();
-        private readonly Dictionary<string, Deck> decks = new();
-        private readonly List<List<Card>> packages = new();
+        private readonly Dictionary<string, Tuple<string, Card>> _cards = new();
+        private readonly Dictionary<string, Deck> _decks = new();
+        private readonly List<List<Card>> _packages = new();
+        private readonly Random _random = new Random();
 
-        public void AddPackage(string[] ids)
+        public void BundlePackage(string[] ids)
         {
             if (ids.Length != 5)
             {
@@ -22,35 +23,35 @@ namespace Server.DAL
             List<Card> package = new();
             foreach (string id in ids)
             {
-                if (cards[id].Item1 == "")
+                if (_cards[id].Item1 == "")
                 {
-                    package.Add(cards[id].Item2);
+                    package.Add(_cards[id].Item2);
                 } else
                 {
-                    throw new ArgumentException($"Card {id} is already owned by {cards[id].Item1}!");
+                    throw new ArgumentException($"Card {id} is already owned by {_cards[id].Item1}!");
                 }
             }
-            packages.Add(package);
+            _packages.Add(package);
         }
 
         public void AssignCardToDeck(string id)
         {
-            Tuple<string, Card> card = cards[id];
+            Tuple<string, Card> card = _cards[id];
             if (card.Item1 != "")
             {
                 int count;
                 try
                 {
-                    count = decks[card.Item1].Count;
+                    count = _decks[card.Item1].Count;
                 }
                 catch (KeyNotFoundException e)
                 {
-                    decks.Add(card.Item1, new Deck($"{card.Item1}'s Deck"));
+                    _decks.Add(card.Item1, new Deck($"{card.Item1}'s Deck"));
                     count = 0;
                 }
                 if (count <= 3)
                 {
-                    decks[card.Item1].AddCard(card.Item2);
+                    _decks[card.Item1].AddCard(card.Item2);
                 }
                 else
                 {
@@ -61,23 +62,23 @@ namespace Server.DAL
 
         public void AssignCardToUser(string id, string user)
         {
-            cards[id] = new Tuple<string, Card>(user, cards[id].Item2);
+            _cards[id] = new Tuple<string, Card>(user, _cards[id].Item2);
         }
 
         public void DeleteCard(string id)
         {
-            if (!cards.Remove(id)) throw new KeyNotFoundException();
+            if (!_cards.Remove(id)) throw new KeyNotFoundException();
         }
 
         public Card GetCard(string id)
         {
-            return cards[id].Item2;
+            return _cards[id].Item2;
         }
 
         public IEnumerable<Card> GetCards(string username)
         {
             List<Card> r = new();
-            foreach (KeyValuePair<string, Tuple<string, Card>> card in cards)
+            foreach (KeyValuePair<string, Tuple<string, Card>> card in _cards)
             {
                 if (card.Value.Item1 == username)
                 {
@@ -89,17 +90,27 @@ namespace Server.DAL
 
         public Deck GetDeck(string user)
         {
-            return decks[user];
+            return _decks[user];
         }
 
         public void GiveRandomPackageToUser(string user)
         {
-            throw new NotImplementedException();
+            if (_packages.Count == 0)
+            {
+                throw new NoPackagesException();
+            }
+            int rand = _random.Next(0, _packages.Count - 1);
+            List<Card> package = _packages[rand];
+            _packages.RemoveAt(rand);
+            foreach (Card card in package)
+            {
+                _cards[card.ID] = new Tuple<string, Card>(user, card);
+            }
         }
 
         public void InsertCard(Card card)
         {
-            cards.Add(card.ID, new Tuple<string, Card>("", card));
+            _cards.Add(card.ID, new Tuple<string, Card>("", card));
         }
 
         public void RemoveCardFromDeck(string id)
@@ -109,7 +120,7 @@ namespace Server.DAL
 
         public void RemoveDeck(string user)
         {
-            if (!decks.Remove(user))
+            if (!_decks.Remove(user))
             {
                 throw new KeyNotFoundException();
             }

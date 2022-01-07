@@ -16,7 +16,7 @@ namespace MTCG.Tests.Cards
         [SetUp]
         public void SetUp ()
         {
-            _testCard = new Spell("Test1", ElementType.Normal, 50);
+            _testCard = new Spell("1", "Test1", ElementType.Normal, 50);
         }
 
         [Test]

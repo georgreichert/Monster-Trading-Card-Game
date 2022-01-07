@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    class MessageIdentityProvider : IIdentityProvider
+    class IdentityProvider : IIdentityProvider
     {
         private readonly IUserRepository userRepository;
 
-        public MessageIdentityProvider(IUserRepository userRepository)
+        public IdentityProvider(IUserRepository userRepository)
         {
             this.userRepository = userRepository;
         }

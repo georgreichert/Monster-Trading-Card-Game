@@ -18,7 +18,7 @@ namespace Server.DAL
         public void RemoveCardFromDeck(string id);
         public Deck GetDeck(string user);
         public void RemoveDeck(string user);
-        public void AddPackage(string[] ids);
+        public void BundlePackage(string[] ids);
         public void GiveRandomPackageToUser(string user);
     }
 }

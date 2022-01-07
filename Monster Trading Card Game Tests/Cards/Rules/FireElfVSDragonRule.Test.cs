@@ -23,24 +23,24 @@ namespace MTCG.Tests.Cards.Rules
         [Test]
         public void RuledCardWrongMonsterTypeTest()
         {
-            Card ruledCard = new Monster("Goblin", ElementType.Fire, 40, MonsterType.Goblin);
-            Card otherCard = new Spell("Test", ElementType.Fire, 50);
+            Card ruledCard = new Monster("1", "Goblin", ElementType.Fire, 40, MonsterType.Goblin);
+            Card otherCard = new Spell("1", "Test", ElementType.Fire, 50);
             Assert.Throws<ArgumentException>(() => _testRule.Apply(ruledCard, otherCard, _game));
         }
 
         [Test]
         public void RuledCardWrongCardTypeTest()
         {
-            Card ruledCard = new Spell("Goblin", ElementType.Fire, 40);
-            Card otherCard = new Spell("Test", ElementType.Fire, 50);
+            Card ruledCard = new Spell("1", "Goblin", ElementType.Fire, 40);
+            Card otherCard = new Spell("1", "Test", ElementType.Fire, 50);
             Assert.Throws<ArgumentException>(() => _testRule.Apply(ruledCard, otherCard, _game));
         }
 
         [Test]
         public void FireElfVSDragonTest()
         {
-            Card ruledCard = new Monster("FireElf", ElementType.Fire, 40, MonsterType.Elf);
-            Card otherCard = new Monster("Dragon", ElementType.Fire, 50, MonsterType.Dragon);
+            Card ruledCard = new Monster("1", "FireElf", ElementType.Fire, 40, MonsterType.Elf);
+            Card otherCard = new Monster("1", "Dragon", ElementType.Fire, 50, MonsterType.Dragon);
             _testRule.Apply(ruledCard, otherCard, _game);
             Assert.That(otherCard.OffensiveDamage == 0);
         }
@@ -48,8 +48,8 @@ namespace MTCG.Tests.Cards.Rules
         [Test]
         public void FireElfVSGoblinTest()
         {
-            Card ruledCard = new Monster("FireElf", ElementType.Fire, 40, MonsterType.Elf);
-            Card otherCard = new Monster("Goblin", ElementType.Fire, 50, MonsterType.Goblin);
+            Card ruledCard = new Monster("1", "FireElf", ElementType.Fire, 40, MonsterType.Elf);
+            Card otherCard = new Monster("1", "Goblin", ElementType.Fire, 50, MonsterType.Goblin);
             _testRule.Apply(ruledCard, otherCard, _game);
             Assert.That(otherCard.OffensiveDamage == 50);
         }

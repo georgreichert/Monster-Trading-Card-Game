@@ -22,16 +22,16 @@ namespace MTCG.Tests.Cards
         [Test]
         public void AddCardCountTest()
         {
-            _deck.AddCard(new Spell("Bla", ElementType.Normal, 50));
+            _deck.AddCard(new Spell("1", "Bla", ElementType.Normal, 50));
             Assert.AreEqual(1, _deck.Count);
         }
 
         [Test]
         public void DrawCardCountTest()
         {
-            _deck.AddCard(new Spell("Bla", ElementType.Normal, 50));
-            _deck.AddCard(new Spell("Bla", ElementType.Normal, 50));
-            _deck.AddCard(new Spell("Bla", ElementType.Normal, 50));
+            _deck.AddCard(new Spell("1", "Bla", ElementType.Normal, 50));
+            _deck.AddCard(new Spell("1", "Bla", ElementType.Normal, 50));
+            _deck.AddCard(new Spell("1", "Bla", ElementType.Normal, 50));
             _deck.DrawCard();
             Assert.AreEqual(2, _deck.Count);
         }

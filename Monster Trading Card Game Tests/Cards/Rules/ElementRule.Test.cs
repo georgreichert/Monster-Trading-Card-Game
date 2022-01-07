@@ -37,8 +37,8 @@ namespace MTCG.Tests.Cards.Rules
         [TestCase(ElementType.Normal, ElementType.Fire, 25)]
         public void SpellVSSpellTest (ElementType ruledCardEType, ElementType otherCardEType, float expected)
         {
-            Spell ruledCard = new Spell("Test1", ruledCardEType, 50);
-            Spell otherCard = new Spell("Test2", otherCardEType, 50);
+            Spell ruledCard = new Spell("1", "Test1", ruledCardEType, 50);
+            Spell otherCard = new Spell("1", "Test2", otherCardEType, 50);
             _rule.Apply(ruledCard, otherCard, _game);
             Assert.AreEqual(expected, ruledCard.OffensiveDamage);
         }
@@ -55,8 +55,8 @@ namespace MTCG.Tests.Cards.Rules
         [TestCase(ElementType.Normal, ElementType.Fire, 25)]
         public void SpellVSMonsterTest(ElementType ruledCardEType, ElementType otherCardEType, float expected)
         {
-            Spell ruledCard = new Spell("Test1", ruledCardEType, 50);
-            Monster otherCard = new Monster("Test2", otherCardEType, 50, MonsterType.Other);
+            Spell ruledCard = new Spell("1", "Test1", ruledCardEType, 50);
+            Monster otherCard = new Monster("1", "Test2", otherCardEType, 50, MonsterType.Other);
             _rule.Apply(ruledCard, otherCard, _game);
             Assert.AreEqual(expected, ruledCard.OffensiveDamage);
         }
@@ -73,8 +73,8 @@ namespace MTCG.Tests.Cards.Rules
         [TestCase(ElementType.Normal, ElementType.Fire, 50)]
         public void MonsterVSMonsterTest(ElementType ruledCardEType, ElementType otherCardEType, float expected)
         {
-            Monster ruledCard = new Monster("Test1", ruledCardEType, 50, MonsterType.Other);
-            Monster otherCard = new Monster("Test2", otherCardEType, 50, MonsterType.Other);
+            Monster ruledCard = new Monster("1", "Test1", ruledCardEType, 50, MonsterType.Other);
+            Monster otherCard = new Monster("1", "Test2", otherCardEType, 50, MonsterType.Other);
             _rule.Apply(ruledCard, otherCard, _game);
             Assert.AreEqual(expected, ruledCard.OffensiveDamage);
         }

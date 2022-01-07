@@ -11,13 +11,13 @@ namespace Server.RouteCommands.Users
 {
     class RegisterCommand : IRouteCommand
     {
-        private readonly IMessageManager messageManager;
+        private readonly IGameManager gameManager;
         public Credentials Credentials { get; private set; }
 
-        public RegisterCommand(IMessageManager messageManager, Credentials credentials)
+        public RegisterCommand(IGameManager gameManager, Credentials credentials)
         {
             Credentials = credentials;
-            this.messageManager = messageManager;
+            this.gameManager = gameManager;
         }
 
         public Response Execute()
@@ -25,7 +25,7 @@ namespace Server.RouteCommands.Users
             var response = new Response();
             try
             {
-                messageManager.RegisterUser(Credentials);
+                gameManager.RegisterUser(Credentials);
                 response.StatusCode = StatusCode.Created;
             }
             catch (DuplicateUserException)
