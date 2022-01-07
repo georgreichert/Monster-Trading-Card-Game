@@ -71,7 +71,7 @@ namespace Server.RouteCommands.Game
 
             return new Response()
             {
-                StatusCode = StatusCode.Ok
+                StatusCode = StatusCode.Created
             };
         }
     }
