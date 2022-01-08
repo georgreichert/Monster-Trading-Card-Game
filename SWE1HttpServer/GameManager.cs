@@ -53,5 +53,15 @@ namespace Server
         {
             _cardRepository.GiveRandomPackageToUser(username);
         }
+
+        public IEnumerable<Card> GetCards(string username)
+        {
+            return _cardRepository.GetCards(username);
+        }
+
+        public Deck GetDeck(string username)
+        {
+            return _cardRepository.GetDeck(username);
+        }
     }
 }

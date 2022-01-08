@@ -32,5 +32,10 @@ namespace MTCG.Cards
             Count--;
             return r;
         }
+
+        public IEnumerable<Card> GetCards()
+        {
+            return _cards;
+        }
     }
 }
