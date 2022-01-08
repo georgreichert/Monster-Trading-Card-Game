@@ -20,6 +20,7 @@ namespace Server.RouteCommands.Game
             _gameManager = gameManager;
             _cards = cards;
         }
+
         public override Response Execute()
         {
             if (User.Username != "admin")
@@ -63,7 +64,8 @@ namespace Server.RouteCommands.Game
             var ids = new string[5];
             for (int i = 0; i < 5; i++)
             {
-                _gameManager.AddCard(new Spell(_cards[i].Id, _cards[i].Name, ElementType.Fire, Int32.Parse(_cards[i].Damage)));
+                _gameManager.AddCard(new Spell(_cards[i].Id, _cards[i].Name, ElementType.Fire, 
+                    Int32.Parse(_cards[i].Damage.Split(".")[0])));
                 ids[i] = _cards[i].Id;
             }
 

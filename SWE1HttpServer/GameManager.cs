@@ -48,5 +48,10 @@ namespace Server
         {
             _cardRepository.BundlePackage(ids);
         }
+
+        public void GiveRandomPackageToUser(string username)
+        {
+            _cardRepository.GiveRandomPackageToUser(username);
+        }
     }
 }

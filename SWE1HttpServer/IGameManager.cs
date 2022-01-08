@@ -14,5 +14,6 @@ namespace Server
         void RegisterUser(Credentials credentials);
         void AddCard(Card card);
         void BundlePackage(string[] ids);
+        void GiveRandomPackageToUser(string username);
     }
 }
