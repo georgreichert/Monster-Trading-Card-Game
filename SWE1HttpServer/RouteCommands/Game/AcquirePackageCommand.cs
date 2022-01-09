@@ -31,7 +31,8 @@ namespace Server.RouteCommands.Game
             {
                 r = new()
                 {
-                    StatusCode = StatusCode.NoContent
+                    StatusCode = StatusCode.NoContent,
+                    Payload = e.Message
                 };
             }
             return r;

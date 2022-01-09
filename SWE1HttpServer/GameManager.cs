@@ -63,5 +63,28 @@ namespace Server
         {
             return _cardRepository.GetDeck(username);
         }
+
+        public void ConfigureDeck(string[] ids, string username)
+        {
+            if(!_cardRepository.IsOwner(ids, username))
+            {
+                throw new UnauthorizedAccessException($"One or more of the chosen cards do not belong to the user {username}");
+            }
+            if (ids.Length != 4)
+            {
+                throw new ArgumentException("Exactly 4 IDs expected.");
+            }
+            try
+            {
+                _cardRepository.RemoveDeck(username);
+            }
+            catch (KeyNotFoundException)
+            {
+            }
+            foreach (string id in ids)
+            {
+                _cardRepository.AssignCardToDeck(id);
+            }
+        }
     }
 }

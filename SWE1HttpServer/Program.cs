@@ -20,7 +20,7 @@ namespace Server
             var gameManager = new GameManager(cardRepository, userRepository);
 
             var identityProvider = new IdentityProvider(userRepository);
-            var routeParser = new IdRouteParser();
+            var routeParser = new MTCGRouteParser();
 
             var router = new Router(routeParser, identityProvider);
             RegisterRoutes(router, gameManager);
@@ -40,6 +40,7 @@ namespace Server
             router.AddProtectedRoute(HttpMethod.Post, "/transactions/packages", (r, p) => new AcquirePackageCommand(gameManager));
             router.AddProtectedRoute(HttpMethod.Get, "/cards", (r, p) => new ShowCardsCommand(gameManager));
             router.AddProtectedRoute(HttpMethod.Get, "/deck", (r, p) => new ShowDeckCommand(gameManager));
+            router.AddProtectedRoute(HttpMethod.Put, "/deck", (r, p) => new ConfigureDeckCommand(gameManager, Deserialize<string[]>(r.Payload)));
             /*
             router.AddProtectedRoute(HttpMethod.Put, "/messages/{id}", (r, p) => new UpdateMessageCommand(gameManager, int.Parse(p["id"]), r.Payload));
             router.AddProtectedRoute(HttpMethod.Delete, "/messages/{id}", (r, p) => new RemoveMessageCommand(gameManager, int.Parse(p["id"])));

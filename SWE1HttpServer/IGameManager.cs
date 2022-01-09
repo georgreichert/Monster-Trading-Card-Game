@@ -17,5 +17,6 @@ namespace Server
         void GiveRandomPackageToUser(string username);
         IEnumerable<Card> GetCards(string username);
         Deck GetDeck(string username);
+        void ConfigureDeck(string[] ids, string username);
     }
 }

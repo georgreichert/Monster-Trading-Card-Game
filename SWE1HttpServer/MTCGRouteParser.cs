@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    class IdRouteParser : IRouteParser
+    class MTCGRouteParser : IRouteParser
     {
         public bool IsMatch(RequestContext request, HttpMethod method, string routePattern)
         {

@@ -44,7 +44,7 @@ namespace Server.DAL
                 {
                     count = _decks[card.Item1].Count;
                 }
-                catch (KeyNotFoundException e)
+                catch (KeyNotFoundException)
                 {
                     _decks.Add(card.Item1, new Deck($"{card.Item1}'s Deck"));
                     count = 0;
@@ -57,6 +57,9 @@ namespace Server.DAL
                 {
                     throw new DeckIsFullException("Can't add more than 4 cards to a deck!");
                 }
+            } else
+            {
+                throw new UnauthorizedAccessException($"The card with ID {id} is not owned by any user.");
             }
         }
 
@@ -90,14 +93,20 @@ namespace Server.DAL
 
         public Deck GetDeck(string user)
         {
-            return _decks[user];
+            try
+            {
+                return _decks[user];
+            } catch (KeyNotFoundException)
+            {
+                return new Deck($"{user}'s Deck");
+            }
         }
 
         public void GiveRandomPackageToUser(string user)
         {
             if (_packages.Count == 0)
             {
-                throw new NoPackagesException();
+                throw new NoPackagesException("There are no more Packages on the server.");
             }
             int rand = _random.Next(0, _packages.Count - 1);
             List<Card> package = _packages[rand];
@@ -122,8 +131,23 @@ namespace Server.DAL
         {
             if (!_decks.Remove(user))
             {
-                throw new KeyNotFoundException();
+                throw new KeyNotFoundException($"Could not delete deck for user {user}");
             }
+        }
+
+        public bool IsOwner(string[] ids, string user)
+        {
+            bool r = true;
+            IEnumerable<Card> cards = GetCards(user);
+            foreach (string id in ids)
+            {
+                if (!(_cards.ContainsKey(id) && _cards[id].Item1 == user))
+                {
+                    r = false;
+                    break;
+                }
+            }
+            return r;
         }
     }
 }

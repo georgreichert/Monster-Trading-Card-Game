@@ -20,5 +20,6 @@ namespace Server.DAL
         public void RemoveDeck(string user);
         public void BundlePackage(string[] ids);
         public void GiveRandomPackageToUser(string user);
+        public bool IsOwner(string[] ids, string user);
     }
 }
