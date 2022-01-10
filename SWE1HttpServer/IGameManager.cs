@@ -22,5 +22,6 @@ namespace Server
         UserPublicData GetUserPublicData(string username);
         void SetUserPublicData(string username, UserPublicData data);
         ScoreBoard GetScoreBoard();
+        List<string> Battle(string username);
     }
 }

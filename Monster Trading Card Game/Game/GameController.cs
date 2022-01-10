@@ -14,7 +14,7 @@ namespace MTCG.Game
 
     public class GameController
     {
-        private List<string> _battleLog = new List<string>();
+        public List<string> BattleLog { get; } = new List<string>();
         private Deck _deck1, _deck2;
 
         public GameController(Deck deck1, Deck deck2)
@@ -137,12 +137,12 @@ namespace MTCG.Game
 
         internal void AddBattleLog(string log)
         {
-            _battleLog.Add(log);
+            BattleLog.Add(log);
         }
 
         public void PrintLog()
         {
-            foreach (string log in _battleLog)
+            foreach (string log in BattleLog)
             {
                 Console.WriteLine(log);
             }

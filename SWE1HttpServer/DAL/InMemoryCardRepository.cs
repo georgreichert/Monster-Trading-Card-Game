@@ -55,7 +55,7 @@ namespace Server.DAL
                 }
                 else
                 {
-                    throw new DeckIsFullException("Can't add more than 4 cards to a deck!");
+                    throw new DeckException("Can't add more than 4 cards to a deck!");
                 }
             } else
             {

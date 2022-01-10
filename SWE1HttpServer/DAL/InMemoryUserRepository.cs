@@ -11,6 +11,25 @@ namespace Server.DAL
     {
         private readonly List<User> _users = new();
 
+        public void AlterStats(string username, BattleResult result)
+        {
+            User user = GetUserByName(username);
+            switch (result)
+            {
+                case BattleResult.Win:
+                    user.Win();
+                    break;
+                case BattleResult.Lose:
+                    user.Lose();
+                    break;
+                case BattleResult.Draw:
+                    user.Draw();
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
         public ScoreBoard GetScoreBoard()
         {
             List<ScoreboardEntry> scores = new();

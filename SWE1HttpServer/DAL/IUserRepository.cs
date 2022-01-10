@@ -18,5 +18,6 @@ namespace Server.DAL
         void SetUserPublicData(string username, UserPublicData data);
         Stats GetUserStats(string username);
         ScoreBoard GetScoreBoard();
+        void AlterStats(string username, BattleResult result);
     }
 }

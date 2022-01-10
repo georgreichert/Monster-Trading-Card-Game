@@ -17,7 +17,7 @@ namespace Server
         {
             var cardRepository = new InMemoryCardRepository();
             var userRepository = new InMemoryUserRepository();
-            var gameManager = new GameManager(cardRepository, userRepository);
+            var gameManager = new GameManager(cardRepository, userRepository, new BattleManager());
 
             var identityProvider = new IdentityProvider(userRepository);
             var routeParser = new MTCGRouteParser();
@@ -41,6 +41,7 @@ namespace Server
             router.AddProtectedRoute(HttpMethod.Post, "/transactions/packages", (r, p) => new AcquirePackageCommand(gameManager));
             router.AddProtectedRoute(HttpMethod.Get, "/cards", (r, p) => new ShowCardsCommand(gameManager));
             router.AddProtectedRoute(HttpMethod.Get, "/stats", (r, p) => new ShowStatsCommand(gameManager));
+            router.AddProtectedRoute(HttpMethod.Post, "/battles", (r, p) => new BattleRequestCommand(gameManager));
             router.AddProtectedRoute(HttpMethod.Get, "/deck", (r, p) => new ShowDeckCommand(gameManager, p));
             router.AddProtectedRoute(HttpMethod.Put, "/deck", (r, p) => new ConfigureDeckCommand(gameManager, Deserialize<string[]>(r.Payload)));
             router.AddProtectedRoute(HttpMethod.Get, "/users/{username}", (r, p) => new ShowUserDataCommand(gameManager, p["params"]["username"]));

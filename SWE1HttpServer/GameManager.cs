@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server
@@ -14,10 +15,14 @@ namespace Server
     {
         private readonly ICardRepository _cardRepository;
         private readonly IUserRepository _userRepository;
-        public GameManager(ICardRepository cardRepository, IUserRepository userRepository)
+        private readonly IBattleManager _battleManager;
+
+        public GameManager(ICardRepository cardRepository, IUserRepository userRepository, IBattleManager battleManager)
         {
             _cardRepository = cardRepository;
             _userRepository = userRepository;
+            _battleManager = battleManager;
+            _battleManager.Start();
         }
 
         public User LoginUser(Credentials credentials)
@@ -105,6 +110,24 @@ namespace Server
         public ScoreBoard GetScoreBoard()
         {
             return _userRepository.GetScoreBoard();
+        }
+
+        public List<string> Battle(string username)
+        {
+            Deck deck = _cardRepository.GetDeck(username);
+            if (deck.Count != 4)
+            {
+                throw new DeckException("Your deck must contain exactly 4 cards to enqueue for battle.");
+            }
+            _battleManager.EnterQueue(username, deck);
+            Thread.Sleep(200);
+            var log = _battleManager.GetBattleLog(username);
+            if (log == null)
+            {
+                throw new ApplicationException("Something went wrong when trying to receive BattleLog, BattleManager was probably stopped.");
+            }
+            _userRepository.AlterStats(username, log.Item1);
+            return log.Item2;
         }
     }
 }
