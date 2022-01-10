@@ -16,5 +16,7 @@ namespace Server.DAL
         bool InsertUser(User user);
         UserPublicData GetUserPublicData(string username);
         void SetUserPublicData(string username, UserPublicData data);
+        Stats GetUserStats(string username);
+        ScoreBoard GetScoreBoard();
     }
 }

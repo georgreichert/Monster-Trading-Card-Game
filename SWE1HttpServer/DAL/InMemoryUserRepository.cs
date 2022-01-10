@@ -11,6 +11,24 @@ namespace Server.DAL
     {
         private readonly List<User> _users = new();
 
+        public ScoreBoard GetScoreBoard()
+        {
+            List<ScoreboardEntry> scores = new();
+            foreach (User user in _users)
+            {
+                scores.Add(new ScoreboardEntry()
+                {
+                    Score = user.ELO,
+                    Name = user.Name != null && user.Name != "" ? user.Name : user.Username
+                });
+            }
+            scores.Sort((a, b) => b.Score - a.Score);
+            return new()
+            {
+                Scores = scores.ToArray()
+            };
+        }
+
         public User GetUserByAuthToken(string authToken)
         {
             return _users.SingleOrDefault(u => u.Token == authToken);
@@ -29,6 +47,11 @@ namespace Server.DAL
                 throw new UserNotFoundException($"No user with the name {username} was found.");
             }
             return data.PublicData;
+        }
+
+        public Stats GetUserStats(string username)
+        {
+            return GetUserByName(username).Stats;
         }
 
         public bool InsertUser(User user)

@@ -28,7 +28,7 @@ namespace Server
 
         public void RegisterUser(Credentials credentials)
         {
-            var user = new User()
+            var user = new User(0, 0, 0, 100)
             {
                 Username = credentials.Username,
                 Password = credentials.Password
@@ -95,6 +95,16 @@ namespace Server
         public void SetUserPublicData(string username, UserPublicData data)
         {
             _userRepository.SetUserPublicData(username, data);
+        }
+
+        public Stats GetStats(string username)
+        {
+            return _userRepository.GetUserStats(username);
+        }
+
+        public ScoreBoard GetScoreBoard()
+        {
+            return _userRepository.GetScoreBoard();
         }
     }
 }

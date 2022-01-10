@@ -34,11 +34,13 @@ namespace Server
             // public routes
             router.AddRoute(HttpMethod.Post, "/sessions", (r, p) => new LoginCommand(gameManager, Deserialize<Credentials>(r.Payload)));
             router.AddRoute(HttpMethod.Post, "/users", (r, p) => new RegisterCommand(gameManager, Deserialize<Credentials>(r.Payload)));
+            router.AddRoute(HttpMethod.Get, "/score", (r, p) => new ShowScoreboardCommand(gameManager));
 
             // protected routes
             router.AddProtectedRoute(HttpMethod.Post, "/packages", (r, p) => new AddPackageCommand(gameManager, Deserialize<CardModel[]>(r.Payload)));
             router.AddProtectedRoute(HttpMethod.Post, "/transactions/packages", (r, p) => new AcquirePackageCommand(gameManager));
             router.AddProtectedRoute(HttpMethod.Get, "/cards", (r, p) => new ShowCardsCommand(gameManager));
+            router.AddProtectedRoute(HttpMethod.Get, "/stats", (r, p) => new ShowStatsCommand(gameManager));
             router.AddProtectedRoute(HttpMethod.Get, "/deck", (r, p) => new ShowDeckCommand(gameManager, p));
             router.AddProtectedRoute(HttpMethod.Put, "/deck", (r, p) => new ConfigureDeckCommand(gameManager, Deserialize<string[]>(r.Payload)));
             router.AddProtectedRoute(HttpMethod.Get, "/users/{username}", (r, p) => new ShowUserDataCommand(gameManager, p["params"]["username"]));

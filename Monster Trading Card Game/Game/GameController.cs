@@ -5,6 +5,13 @@ using System.Collections.Generic;
 
 namespace MTCG.Game
 {
+    public enum Result
+    {
+        Player1Win,
+        Player2Win,
+        Draw
+    }
+
     public class GameController
     {
         private List<string> _battleLog = new List<string>();
@@ -16,7 +23,7 @@ namespace MTCG.Game
             _deck2 = deck2;
         }
 
-        public void Play()
+        public Result Play()
         {
             int turnCounter = 1;
             while (_deck1.Count > 0 && _deck2.Count > 0 && turnCounter <= 100)
@@ -79,19 +86,24 @@ namespace MTCG.Game
                 turnCounter++;
             }
             string finalMessage;
+            Result result;
             if (_deck1.Count > 0)
             {
                 if (_deck2.Count > 0)
                 {
                     finalMessage = "############# DRAW #############";
+                    result = Result.Draw;
                 } else {
                     finalMessage = "############# PLAYER1 WINS #############";
+                    result = Result.Player1Win;
                 }
             } else
             {
                 finalMessage = "############# PLAYER2 WINS #############";
+                result = Result.Player2Win;
             }
             AddBattleLog(finalMessage);
+            return result;
         }
 
         private BattleOutcome HandleFight(Card card1, Card card2)
