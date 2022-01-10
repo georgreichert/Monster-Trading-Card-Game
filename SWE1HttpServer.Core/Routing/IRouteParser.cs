@@ -10,6 +10,6 @@ namespace Server.Core.Routing
     public interface IRouteParser
     {
         bool IsMatch(RequestContext request, HttpMethod method, string routePattern);
-        Dictionary<string, string> ParseParameters(RequestContext request, string routePattern);
+        Dictionary<string, Dictionary<string, string>> ParseParameters(RequestContext request, string routePattern);
     }
 }

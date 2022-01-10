@@ -14,5 +14,7 @@ namespace Server.DAL
         User GetUserByAuthToken(string authToken);
 
         bool InsertUser(User user);
+        UserPublicData GetUserPublicData(string username);
+        void SetUserPublicData(string username, UserPublicData data);
     }
 }

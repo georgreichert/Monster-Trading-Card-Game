@@ -18,5 +18,7 @@ namespace Server
         IEnumerable<Card> GetCards(string username);
         Deck GetDeck(string username);
         void ConfigureDeck(string[] ids, string username);
+        UserPublicData GetUserPublicData(string username);
+        void SetUserPublicData(string username, UserPublicData data);
     }
 }

@@ -9,16 +9,26 @@ namespace Server.DAL
 {
     public class InMemoryUserRepository : IUserRepository
     {
-        private readonly List<User> users = new();
+        private readonly List<User> _users = new();
 
         public User GetUserByAuthToken(string authToken)
         {
-            return users.SingleOrDefault(u => u.Token == authToken);
+            return _users.SingleOrDefault(u => u.Token == authToken);
         }
 
         public User GetUserByCredentials(string username, string password)
         {
-            return users.SingleOrDefault(u => u.Username == username && u.Password == password);
+            return _users.SingleOrDefault(u => u.Username == username && u.Password == password);
+        }
+
+        public UserPublicData GetUserPublicData(string username)
+        {
+            User data = _users.SingleOrDefault(u => u.Username == username);
+            if (data == null)
+            {
+                throw new UserNotFoundException($"No user with the name {username} was found.");
+            }
+            return data.PublicData;
         }
 
         public bool InsertUser(User user)
@@ -27,16 +37,26 @@ namespace Server.DAL
 
             if (GetUserByName(user.Username) == null)
             {
-                users.Add(user);
+                _users.Add(user);
                 inserted = true;
             }
 
             return inserted;
         }
 
+        public void SetUserPublicData(string username, UserPublicData data)
+        {
+            User user = _users.SingleOrDefault(u => u.Username == username);
+            if (user == null)
+            {
+                throw new UserNotFoundException($"No user with the name { username } was found.");
+            }
+            user.PublicData = data;
+        }
+
         private User GetUserByName(string username)
         {
-            return users.SingleOrDefault(u => u.Username == username);
+            return _users.SingleOrDefault(u => u.Username == username);
         }
     }
 }

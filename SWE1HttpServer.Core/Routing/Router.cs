@@ -24,8 +24,8 @@ namespace Server.Core.Routing
 
         private readonly Dictionary<Tuple<HttpMethod, string>, ICreator> routes;
 
-        public delegate IRouteCommand CreatePublicRouteCommand(RequestContext request, Dictionary<string, string> parameters);
-        public delegate IProtectedRouteCommand CreateProtectedRouteCommand(RequestContext request, Dictionary<string, string> parameters);
+        public delegate IRouteCommand CreatePublicRouteCommand(RequestContext request, Dictionary<string, Dictionary<string, string>> parameters);
+        public delegate IProtectedRouteCommand CreateProtectedRouteCommand(RequestContext request, Dictionary<string, Dictionary<string, string>> parameters);
 
         private readonly IRouteParser routeParser;
         private readonly IIdentityProvider identityProvider;
@@ -74,7 +74,7 @@ namespace Server.Core.Routing
             return command;
         }
 
-        private IProtectedRouteCommand Protect(CreateProtectedRouteCommand create, RequestContext request, Dictionary<string, string> parameters)
+        private IProtectedRouteCommand Protect(CreateProtectedRouteCommand create, RequestContext request, Dictionary<string, Dictionary<string, string>> parameters)
         {
             var identity = identityProvider.GetIdentyForRequest(request);
 

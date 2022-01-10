@@ -86,5 +86,15 @@ namespace Server
                 _cardRepository.AssignCardToDeck(id);
             }
         }
+
+        public UserPublicData GetUserPublicData(string username)
+        {
+            return _userRepository.GetUserPublicData(username);
+        }
+
+        public void SetUserPublicData(string username, UserPublicData data)
+        {
+            _userRepository.SetUserPublicData(username, data);
+        }
     }
 }
