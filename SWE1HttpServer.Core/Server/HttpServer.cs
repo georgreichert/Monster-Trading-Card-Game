@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server.Core.Server
@@ -27,10 +28,16 @@ namespace Server.Core.Server
             listener.Start();
             isListening = true;
 
+            List<Thread> threads = new();
             while (isListening)
             {
                 var client = listener.AcceptClient();
-                HandleClient(client);
+                Thread t = new Thread(new ParameterizedThreadStart(HandleClient));
+                t.Start(client);
+            }
+            foreach (Thread t in threads)
+            {
+                t.Join();
             }
         }
 
@@ -40,8 +47,14 @@ namespace Server.Core.Server
             listener.Stop();
         }
 
-        private void HandleClient(IClient client)
+        private void HandleClient(object oClient)
         {
+            IClient client = oClient as IClient;
+            if (client == null)
+            {
+                throw new ArgumentException("Can't cast oClient to client!");
+            }
+
             var request = client.ReceiveRequest();
 
             Response.Response response;
