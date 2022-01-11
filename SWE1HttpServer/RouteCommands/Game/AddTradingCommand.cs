@@ -1,4 +1,6 @@
 ﻿using Server.Core.Response;
+using Server.DAL;
+using Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,20 +9,20 @@ using System.Threading.Tasks;
 
 namespace Server.RouteCommands.Game
 {
-    class ConfigureDeckCommand : ProtectedRouteCommand
+    class AddTradingCommand : ProtectedRouteCommand
     {
         private readonly IGameManager _gameManager;
-        private readonly string[] _ids;
-
-        public ConfigureDeckCommand(IGameManager gameManager, string[] ids)
+        private readonly Trading _trading;
+        
+        public AddTradingCommand(IGameManager gameManager, Trading trading)
         {
             _gameManager = gameManager;
-            _ids = ids;
+            _trading = trading;
         }
 
         public override Response Execute()
         {
-            if (_ids == null)
+            if (_trading == null)
             {
                 return new Response()
                 {
@@ -31,7 +33,7 @@ namespace Server.RouteCommands.Game
 
             try
             {
-                _gameManager.ConfigureDeck(_ids, User.Username);
+                _gameManager.AddTrading(_trading, User.Username);
             } catch (ArgumentException e)
             {
                 return new Response()
@@ -46,10 +48,18 @@ namespace Server.RouteCommands.Game
                     StatusCode = StatusCode.Unauthorized,
                     Payload = e.Message
                 };
+            } catch (DuplicateTradingException e)
+            {
+                return new Response()
+                {
+                    StatusCode = StatusCode.Conflict,
+                    Payload = e.Message
+                };
             }
+
             return new Response()
             {
-                StatusCode = StatusCode.Ok
+                StatusCode = StatusCode.Created
             };
         }
     }

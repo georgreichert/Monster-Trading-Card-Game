@@ -1,4 +1,5 @@
 ﻿using MTCG.Cards;
+using Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Server.DAL
         private readonly Dictionary<string, Deck> _decks = new();
         private readonly List<List<Card>> _packages = new();
         private readonly Random _random = new Random();
+        private readonly Dictionary<string, Trading> _tradings = new();
 
         public void BundlePackage(string[] ids)
         {
@@ -148,6 +150,30 @@ namespace Server.DAL
                 }
             }
             return r;
+        }
+
+        public Trading[] GetTradings()
+        {
+            return _tradings.Values.ToArray();
+        }
+
+        public void AddTrading(Trading trading)
+        {
+            if (_tradings.ContainsKey(trading.Id))
+            {
+                throw new DuplicateTradingException($"A trading with ID {trading.Id} already exists!");
+            }
+            _tradings.Add(trading.Id, trading);
+        }
+
+        public Trading GetTrading(string id)
+        {
+            return _tradings[id];
+        }
+
+        public void DeleteTrading(string id)
+        {
+            _tradings.Remove(id);
         }
     }
 }

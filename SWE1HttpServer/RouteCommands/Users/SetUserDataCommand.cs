@@ -23,6 +23,15 @@ namespace Server.RouteCommands.Users
 
         public override Response Execute()
         {
+            if (_data == null)
+            {
+                return new Response()
+                {
+                    StatusCode = StatusCode.BadRequest,
+                    Payload = "Error deserializing JSON. Please check format."
+                };
+            }
+
             if (_username != User.Username)
             {
                 return new Response()

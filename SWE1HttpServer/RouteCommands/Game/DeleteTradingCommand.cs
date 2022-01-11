@@ -7,36 +7,27 @@ using System.Threading.Tasks;
 
 namespace Server.RouteCommands.Game
 {
-    class ConfigureDeckCommand : ProtectedRouteCommand
+    class DeleteTradingCommand : ProtectedRouteCommand
     {
         private readonly IGameManager _gameManager;
-        private readonly string[] _ids;
+        private readonly string _id;
 
-        public ConfigureDeckCommand(IGameManager gameManager, string[] ids)
+        public DeleteTradingCommand(IGameManager gameManager, string id)
         {
             _gameManager = gameManager;
-            _ids = ids;
+            _id = id;
         }
 
         public override Response Execute()
         {
-            if (_ids == null)
-            {
-                return new Response()
-                {
-                    StatusCode = StatusCode.BadRequest,
-                    Payload = "Error deserializing JSON. Please check format."
-                };
-            }
-
             try
             {
-                _gameManager.ConfigureDeck(_ids, User.Username);
+                _gameManager.DeleteTrading(_id, User.Username);
             } catch (ArgumentException e)
             {
                 return new Response()
                 {
-                    StatusCode = StatusCode.BadRequest,
+                    StatusCode = StatusCode.NotFound,
                     Payload = e.Message
                 };
             } catch (UnauthorizedAccessException e)
@@ -45,6 +36,13 @@ namespace Server.RouteCommands.Game
                 {
                     StatusCode = StatusCode.Unauthorized,
                     Payload = e.Message
+                };
+            } catch (KeyNotFoundException)
+            {
+                return new Response()
+                {
+                    StatusCode = StatusCode.NotFound,
+                    Payload = $"No trading with ID {_id} was found."
                 };
             }
             return new Response()

@@ -30,7 +30,7 @@ namespace Server.DAL
             }
         }
 
-        public ScoreBoard GetScoreBoard()
+        public ScoreboardEntry[] GetScoreBoard()
         {
             List<ScoreboardEntry> scores = new();
             foreach (User user in _users)
@@ -42,10 +42,7 @@ namespace Server.DAL
                 });
             }
             scores.Sort((a, b) => b.Score - a.Score);
-            return new()
-            {
-                Scores = scores.ToArray()
-            };
+            return scores.ToArray();
         }
 
         public User GetUserByAuthToken(string authToken)

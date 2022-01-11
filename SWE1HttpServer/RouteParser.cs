@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    class MTCGRouteParser : IRouteParser
+    class RouteParser : IRouteParser
     {
         public bool IsMatch(RequestContext request, HttpMethod method, string routePattern)
         {
@@ -18,8 +18,9 @@ namespace Server
                 return false;
             }
 
-            string[] patterns = { 
+            string[] patterns = {
                 "^" + routePattern.Replace("{username}", ".*").Replace("/", "\\/") + "$",
+                "^" + routePattern.Replace("{id}", ".*").Replace("/", "\\/") + "$",
                 "^" + (routePattern + "\\?[_A-Za-z0-9]+=.*").Replace("/", "\\/") + "$"
             };
             foreach (string pattern in patterns)
@@ -36,7 +37,8 @@ namespace Server
         {
             var parameters = new Dictionary<string, Dictionary<string, string>>();
             Tuple<string, string>[] patterns = {
-                new Tuple<string, string>("username", "^" + routePattern.Replace("{username}", "(?<username>[^?]*)?.*").Replace("/", "\\/") + "$")
+                new Tuple<string, string>("username", "^" + routePattern.Replace("{username}", "(?<username>[^?]*)?.*").Replace("/", "\\/") + "$"),
+                new Tuple<string, string>("id", "^" + routePattern.Replace("{id}", "(?<id>[^?]*)?.*").Replace("/", "\\/") + "$")
             };
 
             parameters["params"] = new Dictionary<string, string>();

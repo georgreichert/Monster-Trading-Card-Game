@@ -1,4 +1,5 @@
 ﻿using MTCG.Cards;
+using Server.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,9 @@ namespace Server.DAL
         public void BundlePackage(string[] ids);
         public void GiveRandomPackageToUser(string user);
         public bool IsOwner(string[] ids, string user);
+        public Trading[] GetTradings();
+        void AddTrading(Trading trading);
+        Trading GetTrading(string id);
+        void DeleteTrading(string id);
     }
 }

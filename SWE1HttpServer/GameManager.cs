@@ -107,7 +107,7 @@ namespace Server
             return _userRepository.GetUserStats(username);
         }
 
-        public ScoreBoard GetScoreBoard()
+        public ScoreboardEntry[] GetScoreBoard()
         {
             return _userRepository.GetScoreBoard();
         }
@@ -128,6 +128,33 @@ namespace Server
             }
             _userRepository.AlterStats(username, log.Item1);
             return log.Item2;
+        }
+
+        public Trading[] GetTradings()
+        {
+            return _cardRepository.GetTradings();
+        }
+
+        public void AddTrading(Trading trading, string username)
+        {
+            if (trading.Id == "" || trading.CardToTrade == "" || trading.Type == "")
+            {
+                throw new ArgumentException("One ore more arguments missing.");
+            }
+            if (!_cardRepository.IsOwner(new string[1] { trading.CardToTrade }, username)) {
+                throw new UnauthorizedAccessException($"The card with ID {trading.CardToTrade} does not belong to user {username}");
+            }
+            _cardRepository.AddTrading(trading);
+        }
+
+        public void DeleteTrading(string id, string username)
+        {
+            Trading trading = _cardRepository.GetTrading(id);
+            if (!_cardRepository.IsOwner(new string[1] { trading.CardToTrade }, username))
+            {
+                throw new UnauthorizedAccessException($"The trading with ID {id} is not deletable by user {username}");
+            }
+            _cardRepository.DeleteTrading(id);
         }
     }
 }

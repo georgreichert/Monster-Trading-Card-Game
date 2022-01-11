@@ -20,7 +20,7 @@ namespace Server
             var gameManager = new GameManager(cardRepository, userRepository, new BattleManager());
 
             var identityProvider = new IdentityProvider(userRepository);
-            var routeParser = new MTCGRouteParser();
+            var routeParser = new RouteParser();
 
             var router = new Router(routeParser, identityProvider);
             RegisterRoutes(router, gameManager);
@@ -43,6 +43,9 @@ namespace Server
             router.AddProtectedRoute(HttpMethod.Get, "/stats", (r, p) => new ShowStatsCommand(gameManager));
             router.AddProtectedRoute(HttpMethod.Post, "/battles", (r, p) => new BattleRequestCommand(gameManager));
             router.AddProtectedRoute(HttpMethod.Get, "/deck", (r, p) => new ShowDeckCommand(gameManager, p));
+            router.AddProtectedRoute(HttpMethod.Get, "/tradings", (r, p) => new ShowTradingsCommand(gameManager));
+            router.AddProtectedRoute(HttpMethod.Delete, "/tradings/{id}", (r, p) => new DeleteTradingCommand(gameManager, p["params"]["id"]));
+            router.AddProtectedRoute(HttpMethod.Post, "/tradings", (r, p) => new AddTradingCommand(gameManager, Deserialize<Trading>(r.Payload)));
             router.AddProtectedRoute(HttpMethod.Put, "/deck", (r, p) => new ConfigureDeckCommand(gameManager, Deserialize<string[]>(r.Payload)));
             router.AddProtectedRoute(HttpMethod.Get, "/users/{username}", (r, p) => new ShowUserDataCommand(gameManager, p["params"]["username"]));
             router.AddProtectedRoute(HttpMethod.Put, "/users/{username}", (r, p) => new SetUserDataCommand(gameManager, p["params"]["username"], Deserialize<UserPublicData>(r.Payload)));

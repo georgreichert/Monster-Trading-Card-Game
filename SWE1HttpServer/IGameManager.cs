@@ -19,9 +19,12 @@ namespace Server
         Deck GetDeck(string username);
         Stats GetStats(string username);
         void ConfigureDeck(string[] ids, string username);
+        void DeleteTrading(string id, string username);
+        void AddTrading(Trading trading, string username);
         UserPublicData GetUserPublicData(string username);
         void SetUserPublicData(string username, UserPublicData data);
-        ScoreBoard GetScoreBoard();
+        ScoreboardEntry[] GetScoreBoard();
         List<string> Battle(string username);
+        Trading[] GetTradings();
     }
 }
