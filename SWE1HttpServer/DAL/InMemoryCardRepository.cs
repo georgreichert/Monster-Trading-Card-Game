@@ -14,7 +14,7 @@ namespace Server.DAL
         private readonly Dictionary<string, Deck> _decks = new();
         private readonly List<List<Card>> _packages = new();
         private readonly Random _random = new Random();
-        private readonly Dictionary<string, Trading> _tradings = new();
+        private readonly Dictionary<string, TradingParsed> _tradings = new();
 
         public void BundlePackage(string[] ids)
         {
@@ -154,10 +154,16 @@ namespace Server.DAL
 
         public Trading[] GetTradings()
         {
-            return _tradings.Values.ToArray();
+            Trading[] r = new Trading[_tradings.Count];
+            int i = 0;
+            foreach (var parsed in _tradings)
+            {
+                r[i] = parsed.Value.ToTrading();
+            }
+            return r;
         }
 
-        public void AddTrading(Trading trading)
+        public void AddTrading(TradingParsed trading)
         {
             if (_tradings.ContainsKey(trading.Id))
             {
@@ -166,7 +172,7 @@ namespace Server.DAL
             _tradings.Add(trading.Id, trading);
         }
 
-        public Trading GetTrading(string id)
+        public TradingParsed GetTrading(string id)
         {
             return _tradings[id];
         }
@@ -174,6 +180,16 @@ namespace Server.DAL
         public void DeleteTrading(string id)
         {
             _tradings.Remove(id);
+        }
+
+        public void Trade(string id, string cardToTrade)
+        {
+            Card card1 = _cards[cardToTrade].Item2;
+            Card card2 = _cards[GetTrading(id).CardToTrade].Item2;
+            string temp = _cards[cardToTrade].Item1;
+            string cardToGet = GetTrading(id).CardToTrade;
+            _cards[cardToTrade] = new(_cards[cardToGet].Item1, card2);
+            _cards[cardToGet] = new(temp, card1);
         }
     }
 }

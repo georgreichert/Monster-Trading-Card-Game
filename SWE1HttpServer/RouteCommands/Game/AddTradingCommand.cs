@@ -55,6 +55,13 @@ namespace Server.RouteCommands.Game
                     StatusCode = StatusCode.Conflict,
                     Payload = e.Message
                 };
+            } catch (KeyNotFoundException e)
+            {
+                return new Response()
+                {
+                    StatusCode = StatusCode.BadRequest,
+                    Payload = e.Message
+                };
             }
 
             return new Response()

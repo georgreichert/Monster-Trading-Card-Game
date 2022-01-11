@@ -23,8 +23,9 @@ namespace Server.DAL
         public void GiveRandomPackageToUser(string user);
         public bool IsOwner(string[] ids, string user);
         public Trading[] GetTradings();
-        void AddTrading(Trading trading);
-        Trading GetTrading(string id);
+        void AddTrading(TradingParsed trading);
+        TradingParsed GetTrading(string id);
         void DeleteTrading(string id);
+        void Trade(string id, string cardToTrade);
     }
 }

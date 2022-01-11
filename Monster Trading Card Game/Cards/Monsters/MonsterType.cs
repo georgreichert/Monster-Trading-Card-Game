@@ -9,6 +9,8 @@
         Orc,
         Elf,
         Knight,
-        Other
+        Other,
+        Any,
+        None
     }
 }

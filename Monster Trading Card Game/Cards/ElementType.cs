@@ -1,9 +1,13 @@
-﻿namespace MTCG.Cards
+﻿using System.Collections.Generic;
+
+namespace MTCG.Cards
 {
     public enum ElementType
     {
         Fire,
         Water,
-        Normal
+        Normal,
+        None,
+        Any
     }
 }

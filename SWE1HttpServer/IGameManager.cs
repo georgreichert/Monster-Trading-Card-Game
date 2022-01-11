@@ -20,6 +20,7 @@ namespace Server
         Stats GetStats(string username);
         void ConfigureDeck(string[] ids, string username);
         void DeleteTrading(string id, string username);
+        void Trade(string id, string cardToTrade, string username);
         void AddTrading(Trading trading, string username);
         UserPublicData GetUserPublicData(string username);
         void SetUserPublicData(string username, UserPublicData data);

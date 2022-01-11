@@ -45,6 +45,7 @@ namespace Server
             router.AddProtectedRoute(HttpMethod.Get, "/deck", (r, p) => new ShowDeckCommand(gameManager, p));
             router.AddProtectedRoute(HttpMethod.Get, "/tradings", (r, p) => new ShowTradingsCommand(gameManager));
             router.AddProtectedRoute(HttpMethod.Delete, "/tradings/{id}", (r, p) => new DeleteTradingCommand(gameManager, p["params"]["id"]));
+            router.AddProtectedRoute(HttpMethod.Post, "/tradings/{id}", (r, p) => new TradeCommand(gameManager, p["params"]["id"], r.Payload));
             router.AddProtectedRoute(HttpMethod.Post, "/tradings", (r, p) => new AddTradingCommand(gameManager, Deserialize<Trading>(r.Payload)));
             router.AddProtectedRoute(HttpMethod.Put, "/deck", (r, p) => new ConfigureDeckCommand(gameManager, Deserialize<string[]>(r.Payload)));
             router.AddProtectedRoute(HttpMethod.Get, "/users/{username}", (r, p) => new ShowUserDataCommand(gameManager, p["params"]["username"]));
