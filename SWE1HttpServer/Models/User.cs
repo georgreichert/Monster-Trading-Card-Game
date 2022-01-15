@@ -14,7 +14,8 @@ namespace Server.Models
         public string Name { get; set; }
         public string Bio { get; set; }
         public string Image { get; set; }
-        public int Wins { get; private set; } 
+        public int Coins { get; private set; } = 20;
+        public int Wins { get; private set; }
         public int Losses { get; private set; }
         public int Draws { get; private set; }
         public int GamesPlayed { 
@@ -86,6 +87,16 @@ namespace Server.Models
         public void Draw()
         {
             Draws++;
+        }
+
+        public bool Pay(int cost)
+        {
+            if (cost <= Coins)
+            {
+                Coins -= cost;
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Server.Models
     {
         public string Id { get; set; }
         public string Name { get; set; }
-        public string Damage { get; set; }
+        public float Damage { get; set; }
 
         public static CardModel FromCard(Card card)
         {
@@ -19,7 +19,7 @@ namespace Server.Models
             {
                 Id = card.ID,
                 Name = card.Name,
-                Damage = card.Damage.ToString()
+                Damage = card.Damage
             };
         }
     }

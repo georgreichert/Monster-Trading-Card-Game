@@ -8,12 +8,11 @@ using System.Threading.Tasks;
 
 namespace Server.Models
 {
-    class TradingParsed
+    public class TradingParsed
     {
         public string Id { get; set; }
         public string CardToTrade { get; set; }
-        public ElementType EType { get; set; }
-        public MonsterType MType { get; set; }
+        public MonsterType Type { get; set; }
         public int MinimumDamage { get; set; }
 
         public static TradingParsed FromTrading(Trading trading)
@@ -22,8 +21,9 @@ namespace Server.Models
             {
                 Id = trading.Id,
                 CardToTrade = trading.CardToTrade,
-                EType = TypeMapper.MapElementType(trading.ElementType),
-                MType = TypeMapper.MapMonsterType(trading.MonsterType),
+                Type = trading.Type == "monster" ? MonsterType.Any : 
+                    (trading.Type == "spell" ? MonsterType.None : 
+                    throw new ArgumentException("Type must be 'monster' or 'spell'")),
                 MinimumDamage = trading.MinimumDamage,
             };
         }
@@ -34,8 +34,7 @@ namespace Server.Models
             {
                 Id = Id,
                 CardToTrade = CardToTrade,
-                ElementType = TypeMapper.MapElementType(EType),
-                MonsterType = TypeMapper.MapMonsterType(MType),
+                Type = Type == MonsterType.Any ? "monster" : "spell",
                 MinimumDamage = MinimumDamage,
             };
         }

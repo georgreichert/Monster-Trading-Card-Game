@@ -20,7 +20,7 @@ namespace Server.DAL
         public Deck GetDeck(string user);
         public void RemoveDeck(string user);
         public void BundlePackage(string[] ids);
-        public void GiveRandomPackageToUser(string user);
+        public void GivePackageToUser(string user);
         public bool IsOwner(string[] ids, string user);
         public Trading[] GetTradings();
         void AddTrading(TradingParsed trading);

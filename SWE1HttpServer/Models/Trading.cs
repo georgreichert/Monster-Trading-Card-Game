@@ -10,8 +10,7 @@ namespace Server.Models
     {
         public string Id { get; set; }
         public string CardToTrade { get; set; }
-        public string ElementType { get; set; }
-        public string MonsterType { get; set; }
+        public string Type { get; set; }
         public int MinimumDamage { get; set; }
     }
 }

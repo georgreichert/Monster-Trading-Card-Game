@@ -57,7 +57,7 @@ namespace Server
 
         public void GiveRandomPackageToUser(string username)
         {
-            _cardRepository.GiveRandomPackageToUser(username);
+            _cardRepository.GivePackageToUser(username);
         }
 
         public IEnumerable<Card> GetCards(string username)
@@ -170,14 +170,13 @@ namespace Server
             {
                 throw new ArgumentException("You can't trade cards that don't belong to you.");
             }
-            if (trading.MinimumDamage <= card.Damage && (trading.EType == card.EType || trading.EType == ElementType.Any))
+            if (trading.MinimumDamage <= card.Damage)
             {
                 Spell spell = card as Spell;
                 Monster monster = card as Monster;
 
-                if ((spell != null && trading.MType == MonsterType.None) ||
-                    (monster != null && trading.MType == MonsterType.Any) ||
-                    (monster != null && trading.MType == monster.MType))
+                if ((spell != null && trading.Type == MonsterType.None) ||
+                    (monster != null && trading.Type == MonsterType.Any))
                 {
                     _cardRepository.Trade(id, cardToTrade);
                 }

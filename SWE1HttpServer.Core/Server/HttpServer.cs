@@ -34,6 +34,7 @@ namespace Server.Core.Server
                 var client = listener.AcceptClient();
                 Thread t = new Thread(new ParameterizedThreadStart(HandleClient));
                 t.Start(client);
+                threads.Add(t);
             }
             foreach (Thread t in threads)
             {

@@ -104,15 +104,15 @@ namespace Server.DAL
             }
         }
 
-        public void GiveRandomPackageToUser(string user)
+        public void GivePackageToUser(string user)
         {
             if (_packages.Count == 0)
             {
                 throw new NoPackagesException("There are no more Packages on the server.");
             }
-            int rand = _random.Next(0, _packages.Count - 1);
-            List<Card> package = _packages[rand];
-            _packages.RemoveAt(rand);
+            //int rand = _random.Next(0, _packages.Count);
+            List<Card> package = _packages[0];
+            _packages.RemoveAt(0);
             foreach (Card card in package)
             {
                 _cards[card.ID] = new Tuple<string, Card>(user, card);
@@ -190,6 +190,7 @@ namespace Server.DAL
             string cardToGet = GetTrading(id).CardToTrade;
             _cards[cardToTrade] = new(_cards[cardToGet].Item1, card2);
             _cards[cardToGet] = new(temp, card1);
+            _tradings.Remove(id);
         }
     }
 }

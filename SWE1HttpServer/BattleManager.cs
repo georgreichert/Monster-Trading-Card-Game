@@ -17,7 +17,9 @@ namespace Server
 
         public void EnterQueue(string username, Deck deck)
         {
+            // TODO: MUTEX
             _queue.Enqueue(new(username, deck));
+            // endmutex
         }
 
         public Tuple<BattleResult, List<string>> GetBattleLog(string username)
@@ -28,8 +30,8 @@ namespace Server
                     // TODO: MUTEX
                     var log = _logs[username];
                     _logs.Remove(username);
-                    return log;
                     //endmutex
+                    return log;
                 } 
                 catch (KeyNotFoundException) 
                 {
