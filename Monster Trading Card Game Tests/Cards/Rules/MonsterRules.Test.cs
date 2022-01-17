@@ -8,7 +8,7 @@ using System;
 
 namespace MTCG.Tests.Cards.Rules
 {
-    public class FireElfVSDragonRuleTests
+    public class MonsterRuleTests
     {
         GameController _game;
         Rule _testRule;

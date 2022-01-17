@@ -23,6 +23,14 @@ namespace Server.RouteCommands.Users
 
         public override Response Execute()
         {
+            if (_username != User.Username)
+            {
+                return new Response()
+                {
+                    StatusCode = StatusCode.Unauthorized,
+                    Payload = $"You are not authorized to view {_username}'s data."
+                };
+            }
             UserPublicData data;
             try
             {

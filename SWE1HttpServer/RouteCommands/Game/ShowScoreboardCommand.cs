@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Server.RouteCommands.Game
 {
-    class ShowScoreboardCommand : IRouteCommand
+    class ShowScoreboardCommand : ProtectedRouteCommand
     {
         public IGameManager _gameManager;
 
@@ -18,7 +18,7 @@ namespace Server.RouteCommands.Game
             _gameManager = gameManager;
         }
         
-        public Response Execute()
+        public override Response Execute()
         {
             return new Response()
             {

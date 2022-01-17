@@ -46,6 +46,13 @@ namespace Server.RouteCommands.Game
                     StatusCode = StatusCode.Unauthorized,
                     Payload = e.Message
                 };
+            } catch (CardBlockedException e)
+            {
+                return new Response()
+                {
+                    StatusCode = StatusCode.Forbidden,
+                    Payload = e.Message
+                };
             }
             return new Response()
             {

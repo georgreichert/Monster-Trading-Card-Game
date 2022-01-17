@@ -21,6 +21,29 @@ namespace MTCG.Game
         {
             _deck1 = deck1;
             _deck2 = deck2;
+            _deck1.GuardRandom();
+            _deck2.GuardRandom();
+
+            AddBattleLog("#############################################\n" +
+                         "################### BATTLE ##################\n" +
+                         "#############################################\n" +
+                         "##### Player1\n" +
+                        $"#####   {deck1.Name}:");
+            foreach (Card card in deck1.GetCards())
+            {
+                AddBattleLog($"#####     {card.Name}{(card.Guarded ? " - Guarded" : "")}");
+            }
+            AddBattleLog("#####\n" +
+                         "#####\n" +
+                         "##### Player2\n" +
+                        $"#####   {deck2.Name}:");
+            foreach (Card card in deck2.GetCards())
+            {
+                AddBattleLog($"#####     {card.Name}{(card.Guarded ? " - Guarded" : "")}");
+            }
+            AddBattleLog("#############################################\n" +
+                         "#############################################\n" +
+                         "#############################################\n");
         }
 
         public Result Play()
@@ -56,8 +79,32 @@ namespace MTCG.Game
                 AddBattleLog($"\n{card1.Name}: {card1VisibleDamage}\n" +
                     $"{card2.Name}: {card2VisibleDamage}\n");
 
-                string message;
-                switch (HandleFight(card1, card2))
+                string message = "";
+                BattleOutcome turnResult = HandleFight(card1, card2);
+                switch (turnResult)
+                {
+                    case BattleOutcome.WinnerCard1:
+                        if (card2.UseGuard())
+                        {
+                            turnResult = BattleOutcome.Draw;
+                            message = $"{card2.Name} used its guard!";
+                        }
+                        break;
+                    case BattleOutcome.WinnerCard2:
+                        if (card1.UseGuard())
+                        {
+                            turnResult = BattleOutcome.Draw;
+                            message = $"{card1.Name} used its guard!";
+                        }
+                        break;
+                    default:
+                        throw new Exception("Invalid return value, can't determine winner.");
+                }
+                if (message != "")
+                {
+                    AddBattleLog(message);
+                }
+                switch (turnResult)
                 {
                     case BattleOutcome.WinnerCard1:
                         _deck1.AddCard(card1);
@@ -91,15 +138,15 @@ namespace MTCG.Game
             {
                 if (_deck2.Count > 0)
                 {
-                    finalMessage = "############# DRAW #############";
+                    finalMessage = "############# DRAW #############\n\n";
                     result = Result.Draw;
                 } else {
-                    finalMessage = "############# PLAYER1 WINS #############";
+                    finalMessage = "############# PLAYER1 WINS #############\n\n";
                     result = Result.Player1Win;
                 }
             } else
             {
-                finalMessage = "############# PLAYER2 WINS #############";
+                finalMessage = "############# PLAYER2 WINS #############\n\n";
                 result = Result.Player2Win;
             }
             AddBattleLog(finalMessage);

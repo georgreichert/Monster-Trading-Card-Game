@@ -15,6 +15,7 @@ namespace MTCG.Cards
         public ElementType EType { get; }
         public float Damage { get; }
         public bool Destroyed { get; private set; } = false;
+        public bool Guarded { get; private set; }
         public float OffensiveDamage
         {
             get
@@ -27,6 +28,7 @@ namespace MTCG.Cards
                 return value;
             }
         }
+
         public float DefensiveDamage
         {
             get
@@ -43,7 +45,7 @@ namespace MTCG.Cards
         private List<float> _offensiveDamageFactors = new List<float>();
         private List<float> _defensiveDamageFactors = new List<float>();
 
-        public Card (string id, string name, ElementType type, int damage)
+        public Card(string id, string name, ElementType type, int damage)
         {
             ID = id;
             Name = name;
@@ -80,6 +82,18 @@ namespace MTCG.Cards
             _offensiveDamageFactors.Clear();
             _defensiveDamageFactors.Clear();
             Destroyed = false;
+        }
+
+        internal void Guard()
+        {
+            Guarded = true;
+        }
+
+        public bool UseGuard()
+        {
+            bool guard = Guarded;
+            Guarded = false;
+            return guard;
         }
     }
 }

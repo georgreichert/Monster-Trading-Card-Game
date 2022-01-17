@@ -25,14 +25,20 @@ namespace Server.DAL
         private const string _deletePackage = "DELETE FROM \"Packages\" WHERE id = @id";
         private const string _giveCardToUser = "INSERT INTO \"Users_own_Cards\"(username,card) VALUES(@username,@card)";
         private const string _getCardsByUser = "SELECT * FROM \"Cards\" JOIN \"Users_own_Cards\" ON id = card WHERE username = @username";
+        private const string _getCardById = "SELECT * FROM \"Cards\" WHERE id = @id";
         private const string _getDeck = "SELECT * FROM \"Cards\" JOIN \"Cards_in_Decks\" ON id = card WHERE username = @username";
         private const string _checkUserOwnsCard = "SELECT * FROM \"Users_own_Cards\" WHERE username = @username AND card = @card";
         private const string _removeDeck = "DELETE FROM \"Cards_in_Decks\" WHERE username = @username";
+        private const string _checkForCardInTradings = "SELECT * FROM \"Tradings\" WHERE card = @card";
         private const string _assignCardToDeck = "INSERT INTO \"Cards_in_Decks\"(username,card) VALUES(@username,@card)";
         private const string _getUserByCard = "SELECT * FROM \"Users\" JOIN \"Users_own_Cards\" USING(username) WHERE card = @card";
         private const string _getScoreBoard = "SELECT username, elo FROM \"Users\" ORDER BY elo DESC";
+        private const string _checkForCardInDeck = "SELECT * FROM \"Cards_in_Decks\" WHERE card = @card";
         private const string _getTradings = "SELECT * FROM \"Tradings\"";
+        private const string _getTrading = "SELECT * FROM \"Tradings\" WHERE id = @id";
         private const string _addTrading= "INSERT INTO \"Tradings\"(id,type,mindmg,card) VALUES(@id,@type,@mindmg,@card)";
+        private const string _deleteTrading = "DELETE FROM \"Tradings\" WHERE id = @id";
+        private const string _changeCardOwnership = "UPDATE \"Users_own_Cards\" SET username = @username WHERE card = @card";
 
         public DatabaseRepository(NpgsqlConnection connection)
         {
@@ -41,7 +47,23 @@ namespace Server.DAL
 
         public void AddTrading(TradingParsed trading)
         {
-            throw new System.NotImplementedException();
+            lock (_lock)
+            {
+                try
+                {
+                    using (var cmd = new NpgsqlCommand(_addTrading, _connection))
+                    {
+                        cmd.Parameters.AddWithValue("id", trading.Id);
+                        cmd.Parameters.AddWithValue("type", TypeMapper.MapMonsterType(trading.Type));
+                        cmd.Parameters.AddWithValue("mindmg", trading.MinimumDamage);
+                        cmd.Parameters.AddWithValue("card", trading.CardToTrade);
+                        cmd.ExecuteNonQuery();
+                    }
+                } catch (PostgresException)
+                {
+                    throw new DuplicateTradingException($"A trading with the ID {trading.Id} already exists.");
+                }
+            }
         }
 
         public void AlterStats(string username, BattleResult result)
@@ -101,12 +123,34 @@ namespace Server.DAL
 
         public void DeleteTrading(string id)
         {
-            throw new System.NotImplementedException();
+            lock (_lock)
+            {
+                using (var cmd = new NpgsqlCommand(_deleteTrading, _connection))
+                {
+                    cmd.Parameters.AddWithValue("id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public Card GetCard(string id)
         {
-            throw new System.NotImplementedException();
+            lock (_lock)
+            {
+                using (var cmd = new NpgsqlCommand(_getCardById, _connection))
+                {
+                    cmd.Parameters.AddWithValue("id", id);
+                    using var reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        return ReadCard(reader);
+                    }
+                    else
+                    {
+                        throw new KeyNotFoundException($"No card with ID {id} was found.");
+                    }
+                }
+            }
         }
 
         public IEnumerable<Card> GetCards(string username)
@@ -172,7 +216,27 @@ namespace Server.DAL
 
         public TradingParsed GetTrading(string id)
         {
-            throw new System.NotImplementedException();
+            lock (_lock) 
+            {
+                using (var cmd = new NpgsqlCommand(_getTrading, _connection))
+                {
+                    cmd.Parameters.AddWithValue("id", id);
+                    using var reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        return new TradingParsed()
+                        {
+                            Id = Convert.ToString(reader["id"]),
+                            CardToTrade = Convert.ToString(reader["card"]),
+                            MinimumDamage = Convert.ToInt32(reader["mindmg"]),
+                            Type = TypeMapper.MapMonsterType(Convert.ToString(reader["type"]))
+                        };
+                    } else
+                    {
+                        throw new KeyNotFoundException($"No trading with ID {id} was found.");
+                    }
+                }
+            }
         }
 
         public Trading[] GetTradings()
@@ -376,6 +440,40 @@ namespace Server.DAL
             }
         }
 
+        public bool IsCardInDeck(string id)
+        {
+            lock (_lock)
+            {
+                using (var cmd = new NpgsqlCommand(_checkForCardInDeck, _connection))
+                {
+                    cmd.Parameters.AddWithValue("card", id);
+                    using var reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
+
+        public bool IsCardInTrading(string id)
+        {
+            lock (_lock)
+            {
+                using (var cmd = new NpgsqlCommand(_checkForCardInTradings, _connection))
+                {
+                    cmd.Parameters.AddWithValue("card", id);
+                    using var reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
+
         public bool IsOwner(string[] ids, string user)
         {
             lock (_lock)
@@ -505,9 +603,43 @@ namespace Server.DAL
             return false;
         }
 
-        public void Trade(string id, string cardToTrade)
+        public void Trade(string tradingId, string cardToTrade)
         {
-            throw new System.NotImplementedException();
+            TradingParsed trading = GetTrading(tradingId);
+            Card card1 = GetCard(cardToTrade);
+            Card card2 = GetCard(trading.CardToTrade);
+            Monster monster = card1 as Monster;
+            if (trading.MinimumDamage <= card1.Damage)
+            {
+                if ((trading.Type == MonsterType.None && monster == null)
+                    || (trading.Type == MonsterType.Any && monster != null))
+                {
+                    lock (_lock)
+                    {
+                        User user1 = GetUserByCard(card1.ID);
+                        User user2 = GetUserByCard(card2.ID);
+                        using (var cmd = new NpgsqlCommand(_changeCardOwnership, _connection))
+                        {
+                            cmd.Parameters.AddWithValue("username", user1.Username);
+                            cmd.Parameters.AddWithValue("card", card2.ID);
+                            cmd.ExecuteNonQuery();
+                        }
+                        using (var cmd = new NpgsqlCommand(_changeCardOwnership, _connection))
+                        {
+                            cmd.Parameters.AddWithValue("username", user2.Username);
+                            cmd.Parameters.AddWithValue("card", card1.ID);
+                            cmd.ExecuteNonQuery();
+                        }
+                        DeleteTrading(tradingId);
+                    }
+                } else
+                {
+                    throw new ArgumentException($"Type requirement not fulfilled, your card was rejected.");
+                }
+            } else
+            {
+                throw new ArgumentException($"Minimum damage requirement not fulfilled, your card was rejected.");
+            }
         }
 
         private void UpdateUser(User user)

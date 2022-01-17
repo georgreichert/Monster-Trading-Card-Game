@@ -11,6 +11,7 @@ namespace MTCG.Cards
         private List<Card> _cards = new List<Card>();
         public string Name { get; set; }
         public int Count { get; private set; } = 0;
+        private static readonly Random rand = new Random();
 
         public Deck(string name)
         {
@@ -21,6 +22,15 @@ namespace MTCG.Cards
         {
             Count++;
             _cards.Add(card);
+        }
+
+        internal void GuardRandom()
+        {
+            foreach (Card card in _cards)
+            {
+                card.UseGuard();
+            }
+            _cards[rand.Next(0, Count)].Guard();
         }
 
         public Card DrawCard()

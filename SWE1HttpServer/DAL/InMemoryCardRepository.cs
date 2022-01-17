@@ -192,5 +192,15 @@ namespace Server.DAL
             _cards[cardToGet] = new(temp, card1);
             _tradings.Remove(id);
         }
+
+        public bool IsCardInTrading(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsCardInDeck(string id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

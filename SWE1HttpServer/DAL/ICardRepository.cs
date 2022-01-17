@@ -26,6 +26,8 @@ namespace Server.DAL
         void AddTrading(TradingParsed trading);
         TradingParsed GetTrading(string id);
         void DeleteTrading(string id);
-        void Trade(string id, string cardToTrade);
+        void Trade(string tradingId, string cardToTrade);
+        bool IsCardInTrading(string id);
+        bool IsCardInDeck(string id);
     }
 }

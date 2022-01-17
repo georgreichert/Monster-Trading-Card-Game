@@ -62,6 +62,13 @@ namespace Server.RouteCommands.Game
                     StatusCode = StatusCode.BadRequest,
                     Payload = e.Message
                 };
+            } catch (CardBlockedException e)
+            {
+                return new Response()
+                {
+                    StatusCode = StatusCode.BadRequest,
+                    Payload = e.Message
+                };
             }
 
             return new Response()

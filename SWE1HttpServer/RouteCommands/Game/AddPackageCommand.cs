@@ -24,6 +24,7 @@ namespace Server.RouteCommands.Game
             { "FireElf", new Tuple<MonsterType, ElementType>(MonsterType.Elf, ElementType.Fire) },
             { "Ork", new Tuple<MonsterType, ElementType>(MonsterType.Orc, ElementType.Normal) },
             { "Knight", new Tuple<MonsterType, ElementType>(MonsterType.Knight, ElementType.Normal) },
+            { "Wizzard", new Tuple<MonsterType, ElementType>(MonsterType.Wizard, ElementType.Normal) },
             { "FireSpell", new Tuple<MonsterType, ElementType>(MonsterType.None, ElementType.Fire) },
             { "WaterSpell", new Tuple<MonsterType, ElementType>(MonsterType.None, ElementType.Water) },
             { "RegularSpell", new Tuple<MonsterType, ElementType>(MonsterType.None, ElementType.Normal) },

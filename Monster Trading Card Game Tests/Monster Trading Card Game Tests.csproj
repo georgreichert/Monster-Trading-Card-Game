@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Monster Trading Card Game\Monster Trading Card Game.csproj" />
+    <ProjectReference Include="..\SWE1HttpServer\Server.csproj" />
   </ItemGroup>
 
 </Project>

@@ -80,6 +80,13 @@ namespace Server
             {
                 throw new ArgumentException("Exactly 4 IDs expected.");
             }
+            foreach (string id in ids)
+            {
+                if (_cardRepository.IsCardInTrading(id))
+                {
+                    throw new CardBlockedException($"Card with ID {id} is offered in a trading and cannot be assigned to a deck.");
+                }
+            }
             try
             {
                 _cardRepository.RemoveDeck(username);
@@ -144,6 +151,14 @@ namespace Server
             }
             if (!_cardRepository.IsOwner(new string[1] { trading.CardToTrade }, username)) {
                 throw new UnauthorizedAccessException($"The card with ID {trading.CardToTrade} does not belong to user {username}");
+            }
+            if (_cardRepository.IsCardInDeck(trading.CardToTrade))
+            {
+                throw new CardBlockedException($"The card with ID {trading.CardToTrade} is in a deck and cannot be traded.");
+            }
+            if (_cardRepository.IsCardInTrading(trading.CardToTrade))
+            {
+                throw new CardBlockedException($"The card with ID {trading.CardToTrade} is already offered for trade.");
             }
             _cardRepository.AddTrading(TradingParsed.FromTrading(trading));
         }
