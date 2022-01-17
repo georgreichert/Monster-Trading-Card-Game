@@ -24,6 +24,7 @@ card, the mark is removed and the card is returned to the owners deck. The
 round counts as a draw.
 
 ## Time spent
+| ------------ | ------ |
 | Battlelogic: |  ~  7h |   
 | Server:      |  ~ 50h |  
 | Unit Tests:  |  ~  3h |   
