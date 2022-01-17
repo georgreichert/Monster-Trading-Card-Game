@@ -19,23 +19,28 @@ namespace Server.RouteCommands.Game
 
         public override Response Execute()
         {
-            Response r;
             try
             {
-                _gameManager.GiveRandomPackageToUser(User.Username);
-                r = new()
+                _gameManager.GivePackageToUser(User.Username);
+                return new Response()
                 {
                     StatusCode = StatusCode.Ok
                 };
             } catch (NoPackagesException e)
             {
-                r = new()
+                return new Response()
+                {
+                    StatusCode = StatusCode.NoContent,
+                    Payload = e.Message
+                };
+            } catch (NotEnoughCoinsException e)
+            {
+                return new Response()
                 {
                     StatusCode = StatusCode.NoContent,
                     Payload = e.Message
                 };
             }
-            return r;
         }
     }
 }

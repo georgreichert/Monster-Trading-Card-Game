@@ -2,6 +2,7 @@
 using MTCG.Cards.Monsters;
 using MTCG.Cards.Spells;
 using Server.Core.Response;
+using Server.DAL;
 using Server.Models;
 using System;
 using System.Collections.Generic;
@@ -94,12 +95,12 @@ namespace Server.RouteCommands.Game
                         StatusCode = StatusCode.BadRequest,
                         Payload = $"No card with the name '{_cards[i].Name}' exists."
                     };
-                } catch (ArgumentException)
+                } catch (DuplicateCardException e)
                 {
                     return new Response()
                     {
                         StatusCode = StatusCode.Conflict,
-                        Payload = $"A card with ID {_cards[i].Id} already exists."
+                        Payload = e.Message
                     };
                 }
                 ids[i] = _cards[i].Id;

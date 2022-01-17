@@ -15,11 +15,10 @@ namespace Server
     {
         static void Main(string[] args)
         {
-            var cardRepository = new InMemoryCardRepository();
-            var userRepository = new InMemoryUserRepository();
-            var gameManager = new GameManager(cardRepository, userRepository, new BattleManager());
+            var database = new Database("Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=mtcgdb");
+            var gameManager = new GameManager(database.CardRepository, database.UserRepository, new BattleManager());
 
-            var identityProvider = new IdentityProvider(userRepository);
+            var identityProvider = new IdentityProvider(database.UserRepository);
             var routeParser = new RouteParser();
 
             var router = new Router(routeParser, identityProvider);
@@ -50,9 +49,6 @@ namespace Server
             router.AddProtectedRoute(HttpMethod.Put, "/deck", (r, p) => new ConfigureDeckCommand(gameManager, Deserialize<string[]>(r.Payload)));
             router.AddProtectedRoute(HttpMethod.Get, "/users/{username}", (r, p) => new ShowUserDataCommand(gameManager, p["params"]["username"]));
             router.AddProtectedRoute(HttpMethod.Put, "/users/{username}", (r, p) => new SetUserDataCommand(gameManager, p["params"]["username"], Deserialize<UserPublicData>(r.Payload)));
-            /*
-            router.AddProtectedRoute(HttpMethod.Delete, "/messages/{id}", (r, p) => new RemoveMessageCommand(gameManager, int.Parse(p["id"])));
-            */
         }
 
         private static T Deserialize<T>(string payload) where T : class
@@ -61,9 +57,8 @@ namespace Server
             try
             {
                 deserializedData = JsonConvert.DeserializeObject<T>(payload);
-            } catch (Exception e)
+            } catch (Exception)
             {
-                Console.WriteLine(e.Message);
                 deserializedData = null;
             }
             return deserializedData;

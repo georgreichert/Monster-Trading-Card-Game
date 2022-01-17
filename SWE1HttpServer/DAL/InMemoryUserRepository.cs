@@ -50,7 +50,7 @@ namespace Server.DAL
             return _users.SingleOrDefault(u => u.Token == authToken);
         }
 
-        public User GetUserByCredentials(string username, string password)
+        public User LoginUser(string username, string password)
         {
             return _users.SingleOrDefault(u => u.Username == username && u.Password == password);
         }
@@ -96,6 +96,11 @@ namespace Server.DAL
         private User GetUserByName(string username)
         {
             return _users.SingleOrDefault(u => u.Username == username);
+        }
+
+        public bool TakeCoins(int coins, string username)
+        {
+            throw new NotImplementedException();
         }
     }
 }

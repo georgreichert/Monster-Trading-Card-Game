@@ -14,7 +14,7 @@ namespace Server
         void RegisterUser(Credentials credentials);
         void AddCard(Card card);
         void BundlePackage(string[] ids);
-        void GiveRandomPackageToUser(string username);
+        void GivePackageToUser(string username);
         IEnumerable<Card> GetCards(string username);
         Deck GetDeck(string username);
         Stats GetStats(string username);

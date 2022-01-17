@@ -9,7 +9,7 @@ namespace Server.DAL
 {
     public interface IUserRepository
     {
-        User GetUserByCredentials(string username, string password);
+        User LoginUser(string username, string password);
 
         User GetUserByAuthToken(string authToken);
 
@@ -19,5 +19,6 @@ namespace Server.DAL
         Stats GetUserStats(string username);
         ScoreboardEntry[] GetScoreBoard();
         void AlterStats(string username, BattleResult result);
+        bool TakeCoins(int coins, string username);
     }
 }

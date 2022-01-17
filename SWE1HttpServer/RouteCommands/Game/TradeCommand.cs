@@ -28,7 +28,7 @@ namespace Server.RouteCommands.Game
                 return new()
                 {
                     StatusCode = StatusCode.BadRequest,
-                    Payload = "No card to trade was specified."
+                    Payload = "No card to trade was specified or specified in wrong format."
                 };
             }
             try

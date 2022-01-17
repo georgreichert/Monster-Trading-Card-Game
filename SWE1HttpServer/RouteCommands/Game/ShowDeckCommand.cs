@@ -25,7 +25,7 @@ namespace Server.RouteCommands.Game
         {
             Deck deck = _gameManager.GetDeck(User.Username);
             string payload = $"###############\n" +
-                $"Name: {deck.Name}";
+                $"Name: {deck.Name}\n";
             bool plain = false;
 
             if (_parameters["urlParams"].ContainsKey("format") && _parameters["urlParams"]["format"] == "plain")

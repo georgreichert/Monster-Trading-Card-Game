@@ -28,7 +28,7 @@ namespace Server
 
         public User LoginUser(Credentials credentials)
         {
-            var user = _userRepository.GetUserByCredentials(credentials.Username, credentials.Password);
+            var user = _userRepository.LoginUser(credentials.Username, credentials.Password);
             return user ?? throw new UserNotFoundException();
         }
 
@@ -47,7 +47,7 @@ namespace Server
 
         public void AddCard(Card card)
         {
-            _cardRepository.InsertCard(card);
+                _cardRepository.InsertCard(card);
         }
 
         public void BundlePackage(string[] ids)
@@ -55,7 +55,7 @@ namespace Server
             _cardRepository.BundlePackage(ids);
         }
 
-        public void GiveRandomPackageToUser(string username)
+        public void GivePackageToUser(string username)
         {
             _cardRepository.GivePackageToUser(username);
         }
