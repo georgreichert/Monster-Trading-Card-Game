@@ -10,7 +10,6 @@ $1, $2 and so on are used as positional placeholders, and Npgsql translates
 them before submitting the query. This leads to unhelpful and confusing error 
 messages when one or more parameters are accidentally not filled with a 
 value before querying.
-* 
 
 ## Unit testing decisions
 Battlelogic tested with 42 unit tests. Server only tested with integration 
