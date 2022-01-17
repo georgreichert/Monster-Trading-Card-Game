@@ -27,7 +27,7 @@ round counts as a draw.
 Battlelogic:  ~  7h   
 Server:       ~ 50h   
 Unit Tests:   ~  3h   
--------------------   
+___________________   
 Sum:          ~ 60h   
 
 ## Link to Git
