@@ -24,11 +24,11 @@ card, the mark is removed and the card is returned to the owners deck. The
 round counts as a draw.
 
 ## Time spent
-Battlelogic:  ~  7h   
-Server:       ~ 50h   
-Unit Tests:   ~  3h   
-_-------------------_   
-Sum:          ~ 60h   
+| Battlelogic:|  ~  7h |   
+| Server:     |  ~ 50h |  
+| Unit Tests: |  ~  3h |  
+| ----------- | ------ |   
+| Sum:        |  ~ 60h |  
 
 ## Link to Git
 https://github.com/georgreichert/Monster-Trading-Card-Game
