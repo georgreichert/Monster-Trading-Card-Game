@@ -14,12 +14,15 @@ namespace Server
         private readonly Queue<Tuple<string, Deck>> _queue = new();
         private bool _running = false;
         private readonly Dictionary<string, Tuple<BattleResult, List<string>>> _logs = new();
+        private static object _queueLock = new object();
+        private static object _logLock = new object();
 
         public void EnterQueue(string username, Deck deck)
         {
-            // TODO: MUTEX
-            _queue.Enqueue(new(username, deck));
-            // endmutex
+            lock (_queueLock)
+            {
+                _queue.Enqueue(new(username, deck));
+            }
         }
 
         public Tuple<BattleResult, List<string>> GetBattleLog(string username)
@@ -27,11 +30,12 @@ namespace Server
             while (_running) {
                 try
                 {
-                    // TODO: MUTEX
-                    var log = _logs[username];
-                    _logs.Remove(username);
-                    //endmutex
-                    return log;
+                    lock (_logLock)
+                    {
+                        var log = _logs[username];
+                        _logs.Remove(username);
+                        return log;
+                    }
                 } 
                 catch (KeyNotFoundException) 
                 {
@@ -45,12 +49,18 @@ namespace Server
         {
             while (_running)
             {
-                if (_queue.Count >= 2)
+                Tuple<string, Deck> player1 = null;
+                Tuple<string, Deck> player2 = null;
+                lock (_queueLock)
                 {
-                    // TODO: MUTEX
-                    var player1 = _queue.Dequeue();
-                    var player2 = _queue.Dequeue();
-                    // endmutex
+                    if (_queue.Count >= 2)
+                    {
+                        player1 = _queue.Dequeue();
+                        player2 = _queue.Dequeue();
+                    }
+                }
+                if (player1 != null && player2 != null)
+                {
                     GameController game = new(player1.Item2, player2.Item2);
                     Result result = game.Play();
                     BattleResult player1Result = result == Result.Player1Win ? BattleResult.Win :
@@ -58,7 +68,7 @@ namespace Server
                     BattleResult player2Result = result == Result.Player1Win ? BattleResult.Lose :
                         (result == Result.Player2Win ? BattleResult.Win : BattleResult.Draw);
                     _logs.Add(player1.Item1, new(player1Result, game.BattleLog));
-                    _logs.Add(player2.Item1, new (player2Result, game.BattleLog));
+                    _logs.Add(player2.Item1, new(player2Result, game.BattleLog));
                 }
             }
         }
