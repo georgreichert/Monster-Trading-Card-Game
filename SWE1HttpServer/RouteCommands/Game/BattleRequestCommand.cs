@@ -37,6 +37,13 @@ namespace Server.RouteCommands.Game
                     StatusCode = StatusCode.InternalServerError,
                     Payload = e.Message
                 };
+            } catch (DuplicateBattleEnqueueException e)
+            {
+                return new Response()
+                {
+                    StatusCode = StatusCode.Conflict,
+                    Payload = e.Message
+                };
             }
 
             string payload = "";

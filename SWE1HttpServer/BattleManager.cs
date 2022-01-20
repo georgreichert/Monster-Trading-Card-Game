@@ -61,14 +61,21 @@ namespace Server
                 }
                 if (player1 != null && player2 != null)
                 {
-                    GameController game = new(player1.Item2, player2.Item2);
-                    Result result = game.Play();
-                    BattleResult player1Result = result == Result.Player1Win ? BattleResult.Win :
-                        (result == Result.Player2Win ? BattleResult.Lose : BattleResult.Draw);
-                    BattleResult player2Result = result == Result.Player1Win ? BattleResult.Lose :
-                        (result == Result.Player2Win ? BattleResult.Win : BattleResult.Draw);
-                    _logs.Add(player1.Item1, new(player1Result, game.BattleLog));
-                    _logs.Add(player2.Item1, new(player2Result, game.BattleLog));
+                    // start new thread to enable parallel battles
+                    Thread t = new Thread(() => {
+                        GameController game = new(player1.Item2, player2.Item2);
+                        Result result = game.Play();
+                        BattleResult player1Result = result == Result.Player1Win ? BattleResult.Win :
+                            (result == Result.Player2Win ? BattleResult.Lose : BattleResult.Draw);
+                        BattleResult player2Result = result == Result.Player1Win ? BattleResult.Lose :
+                            (result == Result.Player2Win ? BattleResult.Win : BattleResult.Draw);
+                        lock (_logLock)
+                        {
+                            _logs.Add(player1.Item1, new(player1Result, game.BattleLog));
+                            _logs.Add(player2.Item1, new(player2Result, game.BattleLog));
+                        }
+                    });
+                    t.Start();
                 }
             }
         }
@@ -83,6 +90,21 @@ namespace Server
         public void Stop()
         {
             _running = false;
+        }
+
+        public bool IsEnqueued(string username)
+        {
+            lock (_queueLock)
+            {
+                foreach (var tuple in _queue)
+                {
+                    if (tuple.Item1 == username)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
         }
     }
 }

@@ -150,9 +150,15 @@ echo.
 echo.
 
 REM --------------------------------------------------
-echo 17) battle
+echo 17) battle (4 battles in parallel)
 start /b "testuser battle" curl -X POST http://localhost:10001/battles --header "Authorization: Basic testuser-mtcgToken"
+echo should fail (already enqueued)
+start /b "testuser battle" curl -X POST http://localhost:10001/battles --header "Authorization: Basic testuser-mtcgToken"
+echo.
+echo.
 start /b "integrationuser battle" curl -X POST http://localhost:10001/battles --header "Authorization: Basic integrationuser-mtcgToken"
+start /b "kienboec battle" curl -X POST http://localhost:10001/battles --header "Authorization: Basic kienboec-mtcgToken"
+start /b "altenhof battle" curl -X POST http://localhost:10001/battles --header "Authorization: Basic altenhof-mtcgToken"
 ping localhost -n 10 >NUL 2>NUL
 
 REM --------------------------------------------------

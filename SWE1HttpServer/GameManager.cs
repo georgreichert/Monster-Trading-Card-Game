@@ -126,6 +126,10 @@ namespace Server
 
         public List<string> Battle(string username)
         {
+            if (_battleManager.IsEnqueued(username))
+            {
+                throw new DuplicateBattleEnqueueException($"User {username} is already enqueued for battle.");
+            }
             Deck deck = _cardRepository.GetDeck(username);
             if (deck.Count != 4)
             {

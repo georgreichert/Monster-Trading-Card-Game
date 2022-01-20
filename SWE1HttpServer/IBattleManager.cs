@@ -20,5 +20,6 @@ namespace Server
         public void Start();
         public void Stop();
         public Tuple<BattleResult, List<string>> GetBattleLog(string username);
+        bool IsEnqueued(string username);
     }
 }
