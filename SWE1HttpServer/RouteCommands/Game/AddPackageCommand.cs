@@ -133,7 +133,7 @@ namespace Server.RouteCommands.Game
             }
             foreach (CardModel card in cards)
             {
-                if (card.Damage == null || card.Id == null || card.Name == null)
+                if (card.Id == null || card.Name == null)
                 {
                     return true;
                 }

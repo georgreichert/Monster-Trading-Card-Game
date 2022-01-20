@@ -83,7 +83,7 @@ namespace Server.RouteCommands.Game
             {
                 return true;
             }
-            if (trading.Id == null || trading.CardToTrade == null || trading.Type == null || trading.MinimumDamage == null)
+            if (trading.Id == null || trading.CardToTrade == null || trading.Type == null)
             {
                 return true;
             }
