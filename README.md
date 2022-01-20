@@ -41,7 +41,7 @@ round counts as a draw.
 
 ## Bonus feature
 It is possible to post and buy cards for sale via /sales and /sales/{id}, see 
-custom curl script for details.
+custom curl script MonsterTradingCards.integrationtests.curl.bat for details.
 
 ## Time spent
 |              |        |
