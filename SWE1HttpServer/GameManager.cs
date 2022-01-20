@@ -185,21 +185,12 @@ namespace Server
             {
                 throw new ArgumentException("You can't trade cards that don't belong to you.");
             }
-            if (trading.MinimumDamage <= card.Damage)
-            {
-                Spell spell = card as Spell;
-                Monster monster = card as Monster;
+            _cardRepository.Trade(id, cardToTrade);
+        }
 
-                if ((spell != null && trading.Type == MonsterType.None) ||
-                    (monster != null && trading.Type == MonsterType.Any))
-                {
-                    _cardRepository.Trade(id, cardToTrade);
-                }
-            }
-            else
-            {
-                throw new ArgumentException("The chosen card is not eligible for this trading.");
-            }
+        public Card GetCard(string id)
+        {
+            return _cardRepository.GetCard(id);
         }
     }
 }

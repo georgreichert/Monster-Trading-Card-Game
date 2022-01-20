@@ -20,7 +20,7 @@ namespace Server.RouteCommands.Game
 
         public override Response Execute()
         {
-            if (_ids == null)
+            if (IsErroneous(_ids))
             {
                 return new Response()
                 {
@@ -58,6 +58,22 @@ namespace Server.RouteCommands.Game
             {
                 StatusCode = StatusCode.Ok
             };
+        }
+
+        private bool IsErroneous(string[] ids)
+        {
+            if (ids == null)
+            {
+                return true;
+            }
+            foreach (string id in ids)
+            {
+                if (id == null)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

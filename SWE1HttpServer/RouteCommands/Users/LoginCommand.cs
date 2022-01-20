@@ -23,6 +23,15 @@ namespace Server.RouteCommands.Users
 
         public Response Execute()
         {
+            if (Credentials == null || Credentials.Username == null || Credentials.Password == null)
+            {
+                return new Response()
+                {
+                    StatusCode = StatusCode.BadRequest,
+                    Payload = "Error deserializing JSON. Please check format."
+                };
+            }
+
             User user;
             try
             {

@@ -27,5 +27,6 @@ namespace Server
         ScoreboardEntry[] GetScoreBoard();
         List<string> Battle(string username);
         Trading[] GetTradings();
+        Card GetCard(string id);
     }
 }

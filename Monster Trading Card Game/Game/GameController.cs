@@ -98,7 +98,7 @@ namespace MTCG.Game
                         }
                         break;
                     default:
-                        throw new Exception("Invalid return value, can't determine winner.");
+                        break;
                 }
                 if (message != "")
                 {

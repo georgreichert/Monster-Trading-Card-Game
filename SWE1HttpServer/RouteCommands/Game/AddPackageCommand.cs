@@ -47,7 +47,7 @@ namespace Server.RouteCommands.Game
                 };
             }
 
-            if (_cards == null)
+            if (IsErroneousJson(_cards))
             {
                 return new Response()
                 {
@@ -74,6 +74,16 @@ namespace Server.RouteCommands.Game
                         Payload = "One or more values are empty."
                     };
                 }
+                try
+                {
+                    _gameManager.GetCard(card.Id);
+                    return new Response()
+                    {
+                        StatusCode = StatusCode.Conflict,
+                        Payload = $"A card with ID {card.Id} is already in the database."
+                    };
+                }
+                catch (KeyNotFoundException) { }
             }
 
             var ids = new string[5];
@@ -113,6 +123,22 @@ namespace Server.RouteCommands.Game
             {
                 StatusCode = StatusCode.Created
             };
+        }
+
+        private bool IsErroneousJson(CardModel[] cards)
+        {
+            if (cards == null)
+            {
+                return true;
+            }
+            foreach (CardModel card in cards)
+            {
+                if (card.Damage == null || card.Id == null || card.Name == null)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

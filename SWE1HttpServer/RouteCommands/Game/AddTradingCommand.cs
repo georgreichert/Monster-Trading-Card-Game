@@ -22,7 +22,7 @@ namespace Server.RouteCommands.Game
 
         public override Response Execute()
         {
-            if (_trading == null)
+            if (IsErroneousJson(_trading))
             {
                 return new Response()
                 {
@@ -75,6 +75,19 @@ namespace Server.RouteCommands.Game
             {
                 StatusCode = StatusCode.Created
             };
+        }
+
+        private bool IsErroneousJson(Trading trading)
+        {
+            if (trading == null)
+            {
+                return true;
+            }
+            if (trading.Id == null || trading.CardToTrade == null || trading.Type == null || trading.MinimumDamage == null)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }
