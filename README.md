@@ -7,6 +7,11 @@ course, all new RouteCommands are based on ProtectedRouteCommand.
 * RouteParser was extended to be able to parse an arbitrary number of 
 url-parameters in the form of ?param1=value1&param2=value2&...
 * Export of database schema can be found in root directory
+* Added BattleManager for handling of battle queue and battle results
+* Added several custom exceptions for handling of different errors
+* Added several models for json parsing
+* DatabaseRepository implements both repository interfaces because 
+I wanted all database access in one place
 
 ## Lessons learned
 * Named capturing groups in regexes and how they are used
