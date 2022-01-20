@@ -1,9 +1,11 @@
 # Monster Trading Card Game
 
 ## Design
-UML diagram of battle logic is in root directory of this repository. 
-Server architecture is not different from the server provided in the 
-course, all new RouteCommands are based on ProtectedRouteCommand.
+* UML diagram of battle logic is in root directory of this repository. 
+* Server architecture is not different from the server provided in the 
+course, all new RouteCommands are based on ProtectedRouteCommand.   
+* RouteParser was extended to be able to parse an arbitrary number of 
+url-parameters int the form of ?param1=value1&param2=value2&...
 
 ## Lessons learned
 * Named capturing groups in regexes and how they are used
@@ -12,6 +14,10 @@ $1, $2 and so on are used as positional placeholders, and Npgsql translates
 them before submitting the query. This leads to unhelpful and confusing error 
 messages when one or more parameters are accidentally not filled with a 
 value before querying.
+* Sometimes it's hard to decide if it is better to use Exceptions or return 
+values (or both) and where to catch them. If the decision is made inconsistently 
+it can be hard to find the right spot in your code quickly after a few days 
+have passed since writing it :-D
 
 ## Testing decisions
 Battlelogic tested with 42 unit tests. Server only tested with integration 
