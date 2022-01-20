@@ -30,6 +30,7 @@ namespace Server.DAL
         private const string _checkUserOwnsCard = "SELECT * FROM \"Users_own_Cards\" WHERE username = @username AND card = @card";
         private const string _removeDeck = "DELETE FROM \"Cards_in_Decks\" WHERE username = @username";
         private const string _checkForCardInTradings = "SELECT * FROM \"Tradings\" WHERE card = @card";
+        private const string _checkForCardInSales = "SELECT * FROM \"Sales\" WHERE card = @card";
         private const string _assignCardToDeck = "INSERT INTO \"Cards_in_Decks\"(username,card) VALUES(@username,@card)";
         private const string _getUserByCard = "SELECT * FROM \"Users\" JOIN \"Users_own_Cards\" USING(username) WHERE card = @card";
         private const string _getScoreBoard = "SELECT username, elo FROM \"Users\" ORDER BY elo DESC";
@@ -39,10 +40,51 @@ namespace Server.DAL
         private const string _addTrading= "INSERT INTO \"Tradings\"(id,type,mindmg,card) VALUES(@id,@type,@mindmg,@card)";
         private const string _deleteTrading = "DELETE FROM \"Tradings\" WHERE id = @id";
         private const string _changeCardOwnership = "UPDATE \"Users_own_Cards\" SET username = @username WHERE card = @card";
+        private const string _addSale = "INSERT INTO \"Sales\"(id,card,coins) VALUES(@id,@card,@coins)";
+        private const string _deleteSale = "DELETE FROM \"Sales\" WHERE id = @id";
+        private const string _getSale = "SELECT * FROM \"Sales\" WHERE id = @id";
 
         public DatabaseRepository(NpgsqlConnection connection)
         {
             _connection = connection;
+        }
+
+        public void AddSale(Sale sale, string user)
+        {
+            if (IsCardInDeck(sale.CardToSell))
+            {
+                throw new CardBlockedException($"The card with ID {sale.CardToSell} is in a deck and can't be sold.");
+            }
+
+            if (!IsOwner(new string[] { sale.CardToSell }, user))
+            {
+                throw new UnauthorizedAccessException($"The card with ID {sale.Id} does not belong to user {user}.");
+            }
+
+            lock (_lock)
+            {
+                try
+                {
+                    using (var cmd = new NpgsqlCommand(_addSale, _connection))
+                    {
+                        cmd.Parameters.AddWithValue("id", sale.Id);
+                        cmd.Parameters.AddWithValue("card", sale.CardToSell);
+                        cmd.Parameters.AddWithValue("coins", sale.Coins);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (PostgresException e)
+                {
+                    if (e.SqlState == PostgresErrorCodes.UniqueViolation)
+                    {
+                        throw new DuplicateSaleException($"A sale with ID {sale.Id} already exists.");
+                    }
+                    if (e.SqlState == PostgresErrorCodes.ForeignKeyViolation)
+                    {
+                        throw new KeyNotFoundException($"No card with ID {sale.CardToSell} exists.");
+                    }
+                }
+            }
         }
 
         public void AddTrading(TradingParsed trading)
@@ -116,9 +158,43 @@ namespace Server.DAL
             }
         }
 
+        public void Buy(string saleId, string username)
+        {
+            Sale sale = GetSale(saleId);
+            Card card = GetCard(sale.CardToSell);
+            User seller = GetUserByCard(card.ID);
+            lock (_lock)
+            {
+                if (!TakeCoins(sale.Coins, username))
+                {
+                    throw new NotEnoughCoinsException($"User {username} does not have enough coins for this transaction.");
+                }
+                using (var cmd = new NpgsqlCommand(_changeCardOwnership, _connection))
+                {
+                    cmd.Parameters.AddWithValue("username", username);
+                    cmd.Parameters.AddWithValue("card", card.ID);
+                    cmd.ExecuteNonQuery();
+                }
+                DeleteSale(saleId);
+                GiveCoins(sale.Coins, seller.Username);
+            }
+        }
+
         public void DeleteCard(string id)
         {
             throw new System.NotImplementedException();
+        }
+
+        public void DeleteSale(string id)
+        {
+            lock (_lock)
+            {
+                using (var cmd = new NpgsqlCommand(_deleteSale, _connection))
+                {
+                    cmd.Parameters.AddWithValue("id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public void DeleteTrading(string id)
@@ -214,9 +290,34 @@ namespace Server.DAL
             }
         }
 
+        public Sale GetSale(string id)
+        {
+            lock (_lock)
+            {
+                using (var cmd = new NpgsqlCommand(_getSale, _connection))
+                {
+                    cmd.Parameters.AddWithValue("id", id);
+                    using var reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        return new Sale()
+                        {
+                            Id = Convert.ToString(reader["id"]),
+                            CardToSell = Convert.ToString(reader["card"]),
+                            Coins = Convert.ToInt32(reader["coins"]),
+                        };
+                    }
+                    else
+                    {
+                        throw new KeyNotFoundException($"No trading with ID {id} was found.");
+                    }
+                }
+            }
+        }
+
         public TradingParsed GetTrading(string id)
         {
-            lock (_lock) 
+            lock (_lock)
             {
                 using (var cmd = new NpgsqlCommand(_getTrading, _connection))
                 {
@@ -231,7 +332,8 @@ namespace Server.DAL
                             MinimumDamage = Convert.ToInt32(reader["mindmg"]),
                             Type = TypeMapper.MapMonsterType(Convert.ToString(reader["type"]))
                         };
-                    } else
+                    }
+                    else
                     {
                         throw new KeyNotFoundException($"No trading with ID {id} was found.");
                     }
@@ -351,6 +453,13 @@ namespace Server.DAL
             };
         }
 
+        private void GiveCoins(int coins, string username)
+        {
+            User user = GetUserByName(username);
+            user.Coins += coins;
+            UpdateUser(user);
+        }
+
         public void GivePackageToUser(string user)
         {
             lock (_lock)
@@ -445,6 +554,23 @@ namespace Server.DAL
             lock (_lock)
             {
                 using (var cmd = new NpgsqlCommand(_checkForCardInDeck, _connection))
+                {
+                    cmd.Parameters.AddWithValue("card", id);
+                    using var reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        }
+
+        public bool IsCardInSale(string id)
+        {
+            lock (_lock)
+            {
+                using (var cmd = new NpgsqlCommand(_checkForCardInSales, _connection))
                 {
                     cmd.Parameters.AddWithValue("card", id);
                     using var reader = cmd.ExecuteReader();

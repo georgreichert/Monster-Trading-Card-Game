@@ -19,11 +19,14 @@ namespace Server
         Deck GetDeck(string username);
         Stats GetStats(string username);
         void ConfigureDeck(string[] ids, string username);
+        void DeleteSale(string id, string username);
         void DeleteTrading(string id, string username);
         void Trade(string id, string cardToTrade, string username);
         void AddTrading(Trading trading, string username);
         UserPublicData GetUserPublicData(string username);
         void SetUserPublicData(string username, UserPublicData data);
+        void Buy(string id, string username);
+        void AddSale(Sale sale, string username);
         ScoreboardEntry[] GetScoreBoard();
         List<string> Battle(string username);
         Trading[] GetTradings();

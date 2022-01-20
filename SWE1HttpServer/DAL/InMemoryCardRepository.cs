@@ -202,5 +202,30 @@ namespace Server.DAL
         {
             throw new NotImplementedException();
         }
+
+        public void AddSale(Sale sale, string user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsCardInSale(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void DeleteSale(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Sale GetSale(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Buy(string id, string username)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

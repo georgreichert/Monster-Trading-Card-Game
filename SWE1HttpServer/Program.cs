@@ -49,6 +49,9 @@ namespace Server
             router.AddProtectedRoute(HttpMethod.Put, "/deck", (r, p) => new ConfigureDeckCommand(gameManager, Deserialize<string[]>(r.Payload)));
             router.AddProtectedRoute(HttpMethod.Get, "/users/{username}", (r, p) => new ShowUserDataCommand(gameManager, p["params"]["username"]));
             router.AddProtectedRoute(HttpMethod.Put, "/users/{username}", (r, p) => new SetUserDataCommand(gameManager, p["params"]["username"], Deserialize<UserPublicData>(r.Payload)));
+            router.AddProtectedRoute(HttpMethod.Post, "/sales", (r, p) => new AddSaleCommand(gameManager, Deserialize<Sale>(r.Payload)));
+            router.AddProtectedRoute(HttpMethod.Delete, "/sales/{id}", (r, p) => new DeleteSaleCommand(gameManager, p["params"]["id"]));
+            router.AddProtectedRoute(HttpMethod.Post, "/sales/{id}", (r, p) => new BuyCommand(gameManager, p["params"]["id"]));
         }
 
         private static T Deserialize<T>(string payload) where T : class

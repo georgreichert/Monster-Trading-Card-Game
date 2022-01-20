@@ -86,6 +86,10 @@ namespace Server
                 {
                     throw new CardBlockedException($"Card with ID {id} is offered in a trading and cannot be assigned to a deck.");
                 }
+                if (_cardRepository.IsCardInSale(id))
+                {
+                    throw new CardBlockedException($"Card with ID {id} is offered in a sale and cannot be assigned to a deck.");
+                }
             }
             try
             {
@@ -191,6 +195,32 @@ namespace Server
         public Card GetCard(string id)
         {
             return _cardRepository.GetCard(id);
+        }
+
+        public void AddSale(Sale sale, string username)
+        {
+            _cardRepository.AddSale(sale, username);
+        }
+
+        public void DeleteSale(string id, string username)
+        {
+            Sale sale = _cardRepository.GetSale(id);
+            if (!_cardRepository.IsOwner(new string[1] { sale.CardToSell }, username))
+            {
+                throw new UnauthorizedAccessException($"The sale with ID {id} is not deletable by user {username}");
+            }
+            _cardRepository.DeleteSale(id);
+        }
+
+        public void Buy(string id, string username)
+        {
+            Sale sale = _cardRepository.GetSale(id);
+            if (_cardRepository.IsOwner(new string[1] { sale.CardToSell }, username))
+            {
+                throw new ArgumentException("You can't buy your own cards.");
+            }
+
+            _cardRepository.Buy(id, username);
         }
     }
 }

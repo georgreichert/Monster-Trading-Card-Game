@@ -29,5 +29,10 @@ namespace Server.DAL
         void Trade(string tradingId, string cardToTrade);
         bool IsCardInTrading(string id);
         bool IsCardInDeck(string id);
+        void AddSale(Sale sale, string user);
+        bool IsCardInSale(string id);
+        void DeleteSale(string id);
+        Sale GetSale(string id);
+        void Buy(string id, string username);
     }
 }
