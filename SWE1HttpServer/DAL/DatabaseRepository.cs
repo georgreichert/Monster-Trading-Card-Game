@@ -43,6 +43,7 @@ namespace Server.DAL
         private const string _addSale = "INSERT INTO \"Sales\"(id,card,coins) VALUES(@id,@card,@coins)";
         private const string _deleteSale = "DELETE FROM \"Sales\" WHERE id = @id";
         private const string _getSale = "SELECT * FROM \"Sales\" WHERE id = @id";
+        private const string _getSales = "SELECT * FROM \"Sales\"";
 
         public DatabaseRepository(NpgsqlConnection connection)
         {
@@ -311,6 +312,28 @@ namespace Server.DAL
                     {
                         throw new KeyNotFoundException($"No trading with ID {id} was found.");
                     }
+                }
+            }
+        }
+
+        public Sale[] GetSales()
+        {
+            lock (_lock)
+            {
+                using (var cmd = new NpgsqlCommand(_getSales, _connection))
+                {
+                    List<Sale> sales = new();
+                    using var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        sales.Add(new Sale() 
+                        { 
+                            Id = Convert.ToString(reader["id"]),
+                            CardToSell = Convert.ToString(reader["card"]),
+                            Coins = Convert.ToInt32(reader["coins"])
+                        });
+                    }
+                    return sales.ToArray();
                 }
             }
         }

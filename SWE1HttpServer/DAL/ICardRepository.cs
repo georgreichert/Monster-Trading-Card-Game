@@ -34,5 +34,6 @@ namespace Server.DAL
         void DeleteSale(string id);
         Sale GetSale(string id);
         void Buy(string id, string username);
+        Sale[] GetSales();
     }
 }

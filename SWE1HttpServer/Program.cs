@@ -52,6 +52,7 @@ namespace Server
             router.AddProtectedRoute(HttpMethod.Post, "/sales", (r, p) => new AddSaleCommand(gameManager, Deserialize<Sale>(r.Payload)));
             router.AddProtectedRoute(HttpMethod.Delete, "/sales/{id}", (r, p) => new DeleteSaleCommand(gameManager, p["params"]["id"]));
             router.AddProtectedRoute(HttpMethod.Post, "/sales/{id}", (r, p) => new BuyCommand(gameManager, p["params"]["id"]));
+            router.AddProtectedRoute(HttpMethod.Get, "/sales", (r, p) => new ShowSalesCommand(gameManager));
         }
 
         private static T Deserialize<T>(string payload) where T : class

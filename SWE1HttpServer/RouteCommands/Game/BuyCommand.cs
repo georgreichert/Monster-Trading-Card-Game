@@ -1,4 +1,5 @@
 ﻿using Server.Core.Response;
+using Server.DAL;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,14 @@ namespace Server.RouteCommands.Game
                 return new()
                 {
                     StatusCode = StatusCode.NotFound,
+                    Payload = e.Message
+                };
+            }
+            catch (NotEnoughCoinsException e)
+            {
+                return new()
+                {
+                    StatusCode = StatusCode.NoContent,
                     Payload = e.Message
                 };
             }

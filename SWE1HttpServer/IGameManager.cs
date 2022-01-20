@@ -30,6 +30,7 @@ namespace Server
         ScoreboardEntry[] GetScoreBoard();
         List<string> Battle(string username);
         Trading[] GetTradings();
+        Sale[] GetSales();
         Card GetCard(string id);
     }
 }

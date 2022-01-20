@@ -257,8 +257,20 @@ echo should fail configure deck with card in sale
 curl -X PUT http://localhost:10001/deck --header "Content-Type: application/json" --header "Authorization: Basic testuser-mtcgToken" -d "[\"e561880c-cb4d-4531-9418-1515bb5b29cc\", \"061fac5e-eac4-450e-bc94-21a7ef920c4a\", \"5dbd3376-ca48-4186-96e0-16e30a490efe\", \"82142195-a9ec-44af-b551-45888e7b1b79\"]"
 echo.
 echo.
+echo should fail (can't buy from yourself)
+curl -X POST http://localhost:10001/sales/35cd5e4b-67ee-4c61-b56b-1d9aabc213b7 --header "Content-Type: application/json" --header "Authorization: Basic testuser-mtcgToken" -d ""
+echo.
+echo.
+echo should fail (not enough money)
+curl -X POST http://localhost:10001/sales/35cd5e4b-67ee-4c61-b56b-1d9aabc213b7 --header "Content-Type: application/json" --header "Authorization: Basic kienboec-mtcgToken" -d ""
+echo.
+echo.
+curl -X GET http://localhost:10001/sales --header "Authorization: Basic testuser-mtcgToken"
+echo.
 echo should work
 curl -X POST http://localhost:10001/sales/35cd5e4b-67ee-4c61-b56b-1d9aabc213b7 --header "Content-Type: application/json" --header "Authorization: Basic integrationuser-mtcgToken" -d ""
+echo.
+curl -X GET http://localhost:10001/sales --header "Authorization: Basic testuser-mtcgToken"
 echo.
 
 REM --------------------------------------------------

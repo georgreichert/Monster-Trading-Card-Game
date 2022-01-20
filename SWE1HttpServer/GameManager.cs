@@ -183,7 +183,7 @@ namespace Server
             TradingParsed trading = _cardRepository.GetTrading(id);
             if (_cardRepository.IsOwner(new string[1] { trading.CardToTrade }, username))
             {
-                throw new ArgumentException("Stop touching yourself, people are watching!");
+                throw new ArgumentException("You can't trade with yourself.");
             }
             if (!_cardRepository.IsOwner(new string[1] { cardToTrade }, username))
             {
@@ -221,6 +221,11 @@ namespace Server
             }
 
             _cardRepository.Buy(id, username);
+        }
+
+        public Sale[] GetSales()
+        {
+            return _cardRepository.GetSales();
         }
     }
 }

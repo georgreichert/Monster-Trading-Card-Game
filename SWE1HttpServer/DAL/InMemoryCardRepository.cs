@@ -227,5 +227,10 @@ namespace Server.DAL
         {
             throw new NotImplementedException();
         }
+
+        public Sale[] GetSales()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
