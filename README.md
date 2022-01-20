@@ -1,7 +1,9 @@
 # Monster Trading Card Game
 
 ## Design
-
+UML diagram of battle logic is in root directory of this repository. 
+Server architecture is not different from the server provided in the 
+course, all new RouteCommands are based on ProtectedRouteCommand.
 
 ## Lessons learned
 * Named capturing groups in regexes and how they are used
