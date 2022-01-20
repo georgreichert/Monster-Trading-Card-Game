@@ -11,10 +11,15 @@ them before submitting the query. This leads to unhelpful and confusing error
 messages when one or more parameters are accidentally not filled with a 
 value before querying.
 
-## Unit testing decisions
+## Testing decisions
 Battlelogic tested with 42 unit tests. Server only tested with integration 
 tests because of the high amount of exception handling involved. Unit tests 
-seemed impractical in most cases.
+seemed impractical in most cases.   
+Integration tests for server, in addition to the provided curl-script, focused 
+on the different problems that can occur when trading cards and when 
+syntactically incorrect or incomplete json strings are transmitted. Also 
+tested problems occuring by trying to get unauthorized access to someone elses 
+cards or tradings.
 
 ## Unique feature
 Before each game one card of both contesting players' decks is chosen randomly 
