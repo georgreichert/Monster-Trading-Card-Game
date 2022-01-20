@@ -5,7 +5,7 @@
 * Server architecture is not different from the server provided in the 
 course, all new RouteCommands are based on ProtectedRouteCommand.   
 * RouteParser was extended to be able to parse an arbitrary number of 
-url-parameters int the form of ?param1=value1&param2=value2&...
+url-parameters in the form of ?param1=value1&param2=value2&...
 
 ## Lessons learned
 * Named capturing groups in regexes and how they are used
